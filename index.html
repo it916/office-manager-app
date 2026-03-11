@@ -451,6 +451,45 @@
   }
   .empty-state .big { font-size: 2.5rem; display: block; margin-bottom: 8px; }
 
+  /* ── LIGHT MODE (automático según el sistema) ── */
+  @media (prefers-color-scheme: light) {
+    :root {
+      --dark: #ffffff;
+      --darker: #f3f4f6;
+      --surface: #ffffff;
+      --surface2: #f9fafb;
+      --border: rgba(0,0,0,0.09);
+      --text: #1a1a1a;
+      --muted: #6b7280;
+    }
+
+    header { box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+
+    .form-input, .form-select, .form-textarea {
+      background: #f9fafb;
+      color: #1a1a1a;
+    }
+
+    .form-select option { background: #ffffff; color: #1a1a1a; }
+
+    td { border-bottom-color: rgba(0,0,0,0.05); }
+    tr:hover td { background: rgba(0,0,0,0.02); }
+
+    .modal-overlay { background: rgba(0,0,0,0.4); }
+
+    .time-box { background: #f3f4f6; }
+    .task-mini { background: #f3f4f6; }
+
+    .btn-outline {
+      border-color: rgba(0,0,0,0.15);
+      color: #1a1a1a;
+    }
+
+    .btn-primary { color: #ffffff; }
+
+    .badge-out { background: rgba(107,114,128,0.12); border-color: rgba(107,114,128,0.25); }
+  }
+
   /* ── RESPONSIVE ── */
   @media (max-width: 640px) {
     header { padding: 0 1rem; }

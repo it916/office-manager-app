@@ -968,10 +968,163 @@ function saveNote(){
 }
 
 // ═══════════════════════════════════════
+//  GOOGLE SHEETS SYNC
+// ═══════════════════════════════════════
+const API_URL = 'https://script.google.com/macros/s/AKfycbywsnNk8evmJ9m82XagoZUU9-L0xJyu0ta6n1do5JfLeiUlCy092IcE99SoFdGYoRrq/exec';
+
+// Indicador de sync en el header
+function showSyncStatus(msg, color='var(--cyan)') {
+  let el = document.getElementById('sync-status');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'sync-status';
+    el.style.cssText = 'font-family:"DM Mono",monospace;font-size:0.72rem;padding:4px 12px;border-radius:20px;border:1px solid;transition:all 0.3s';
+    document.querySelector('.header-right').prepend(el);
+  }
+  el.textContent = msg;
+  el.style.color = color;
+  el.style.borderColor = color;
+  el.style.background = color.replace(')',',0.1)').replace('var(','rgba(').replace('--cyan','25,205,235').replace('--green','34,197,94').replace('--red','239,68,68');
+}
+
+// Convierte localStorage → formato Sheets
+function buildSyncPayload() {
+  // Asistencia: convierte records object → array de filas
+  const attRecords = Object.entries(attState.records).map(([key, rec]) => {
+    const [empId, fecha] = key.split('_');
+    return {
+      ID: key, EmpleadoID: empId, Fecha: fecha,
+      Conectado:  rec.connected  ? 'TRUE' : 'FALSE',
+      Meeting:    rec.meeting    ? 'TRUE' : 'FALSE',
+      Ausente:    rec.absent     ? 'TRUE' : 'FALSE',
+      Tarde:      rec.late       ? 'TRUE' : 'FALSE',
+      Permiso:    rec.permission ? 'TRUE' : 'FALSE',
+      Vacaciones: rec.vacation   ? 'TRUE' : 'FALSE',
+      Nota:       rec.note || ''
+    };
+  });
+
+  return {
+    empleados: employees.map(e => ({
+      ID: e.id, Nombre: e.name, Cargo: e.role,
+      Departamento: e.dept, Email: e.email,
+      FechaCreacion: e.created || todayStr()
+    })),
+    checkins: checkins.map(c => ({
+      ID: c.id, EmpleadoID: c.empId, Fecha: c.date,
+      HoraEntrada: c.timeIn || '', HoraSalida: c.timeOut || '',
+      Modalidad: c.mode || ''
+    })),
+    asistencia: attRecords,
+    eventos: attState.events.map(ev => ({
+      ID: ev.id, EmpleadoID: ev.empId, Tipo: ev.type,
+      FechaInicio: ev.start, FechaFin: ev.end,
+      Descripcion: ev.desc || '', FechaRegistro: todayStr()
+    })),
+    horas: attState.hours.map(h => ({
+      ID: h.id, EmpleadoID: h.empId, Horas: h.amount,
+      Motivo: h.reason, FechaAcordada: h.date,
+      Repuesto: h.done ? 'TRUE' : 'FALSE', FechaRegistro: todayStr()
+    }))
+  };
+}
+
+// Envía todo a Sheets
+async function syncToSheets() {
+  showSyncStatus('⟳ Sincronizando...');
+  try {
+    const payload = buildSyncPayload();
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'syncAll', data: payload })
+    });
+    const json = await res.json();
+    if (json.success) {
+      showSyncStatus('✓ Sincronizado', 'var(--green)');
+      setTimeout(() => showSyncStatus('● En línea', 'var(--green)'), 3000);
+    } else {
+      showSyncStatus('✕ Error sync', 'var(--red)');
+      console.error('Sync error:', json.error);
+    }
+  } catch(err) {
+    showSyncStatus('✕ Sin conexión', 'var(--red)');
+    console.error('Fetch error:', err);
+  }
+}
+
+// Carga datos desde Sheets al iniciar
+async function loadFromSheets() {
+  showSyncStatus('⟳ Cargando...');
+  try {
+    // Cargar empleados
+    const [empRes, ciRes, attRes, evRes, hrRes] = await Promise.all([
+      fetch(`${API_URL}?action=getAll&sheet=empleados`),
+      fetch(`${API_URL}?action=getAll&sheet=checkin`),
+      fetch(`${API_URL}?action=getAll&sheet=asistencia`),
+      fetch(`${API_URL}?action=getAll&sheet=permisos`),
+      fetch(`${API_URL}?action=getAll&sheet=horas`),
+    ]);
+
+    const [empData, ciData, attData, evData, hrData] = await Promise.all([
+      empRes.json(), ciRes.json(), attRes.json(), evRes.json(), hrRes.json()
+    ]);
+
+    // Solo reemplaza si hay datos en Sheets
+    if (Array.isArray(empData) && empData.length > 0) {
+      employees = empData.map(r => ({ id:r.ID, name:r.Nombre, role:r.Cargo, dept:r.Departamento, email:r.Email, created:r.FechaCreacion }));
+      DB.set('employees', employees);
+    }
+
+    if (Array.isArray(ciData) && ciData.length > 0) {
+      checkins = ciData.map(r => ({ id:r.ID, empId:r.EmpleadoID, date:r.Fecha, timeIn:r.HoraEntrada, timeOut:r.HoraSalida, mode:r.Modalidad }));
+      DB.set('checkins', checkins);
+    }
+
+    if (Array.isArray(attData) && attData.length > 0) {
+      attState.records = {};
+      attData.forEach(r => {
+        attState.records[r.ID] = {
+          connected:  r.Conectado  === 'TRUE',
+          meeting:    r.Meeting    === 'TRUE',
+          absent:     r.Ausente    === 'TRUE',
+          late:       r.Tarde      === 'TRUE',
+          permission: r.Permiso    === 'TRUE',
+          vacation:   r.Vacaciones === 'TRUE',
+          note:       r.Nota || ''
+        };
+      });
+    }
+
+    if (Array.isArray(evData) && evData.length > 0) {
+      attState.events = evData.map(r => ({ id:r.ID, empId:r.EmpleadoID, type:r.Tipo, start:r.FechaInicio, end:r.FechaFin, desc:r.Descripcion }));
+    }
+
+    if (Array.isArray(hrData) && hrData.length > 0) {
+      attState.hours = hrData.map(r => ({ id:r.ID, empId:r.EmpleadoID, amount:parseFloat(r.Horas)||0, reason:r.Motivo, date:r.FechaAcordada, done:r.Repuesto==='TRUE' }));
+    }
+
+    saveAtt();
+    showSyncStatus('● En línea', 'var(--green)');
+    renderDashboard();
+
+  } catch(err) {
+    showSyncStatus('⚠ Offline', 'var(--yellow)');
+    console.warn('Cargando desde localStorage:', err);
+    renderDashboard();
+  }
+}
+
+// Auto-sync cada vez que se guardan datos
+const _origSaveMain = saveMain;
+saveMain = function() { _origSaveMain(); syncToSheets(); };
+const _origSaveAtt = saveAtt;
+saveAtt = function() { localStorage.setItem('om_att', JSON.stringify(attState)); syncToSheets(); };
+
+// ═══════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════
 seedDemo();
-renderDashboard();
+loadFromSheets();
 </script>
 </body>
 </html>

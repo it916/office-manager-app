@@ -1111,9 +1111,9 @@ renderDashboard();
         userEl = document.createElement("div");
         userEl.id = "user-info";
         userEl.style.cssText = "display:flex;align-items:center;gap:10px;font-size:0.78rem;color:var(--muted);font-family:DM Mono,monospace";
-        userEl.innerHTML = \`<img src="\${user.photoURL}" style="width:28px;height:28px;border-radius:50%;border:2px solid var(--cyan)" onerror="this.style.display='none'">
-          <span>\${user.displayName || user.email}</span>
-          <button onclick="firebaseSignOut()" style="background:rgba(239,68,68,0.1);color:var(--red);border:1px solid rgba(239,68,68,0.3);border-radius:6px;padding:3px 10px;font-size:0.7rem;cursor:pointer;font-family:Syne,sans-serif">Salir</button>\`;
+        userEl.innerHTML = '<img src="' + (user.photoURL||'') + '" style="width:28px;height:28px;border-radius:50%;border:2px solid var(--cyan)" onerror="this.style.display=\'none\'">'
+          + '<span style="margin-left:4px">' + (user.displayName || user.email) + '</span>'
+          + '<button onclick="firebaseSignOut()" style="background:rgba(239,68,68,0.1);color:var(--red);border:1px solid rgba(239,68,68,0.3);border-radius:6px;padding:3px 10px;font-size:0.7rem;cursor:pointer;font-family:Syne,sans-serif;margin-left:4px">Salir</button>';
         document.querySelector(".header-right").appendChild(userEl);
       }
       startListeners();

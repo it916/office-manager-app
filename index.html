@@ -1059,9 +1059,11 @@ renderDashboard();
 
 <!-- Firebase SDK -->
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-  import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { initializeApp }   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut }
+                             from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot }
+                             from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   const ALLOWED_EMAILS = [
     "it@heroinsuranceusa.com",
@@ -1072,153 +1074,116 @@ renderDashboard();
   ];
 
   const firebaseConfig = {
-    apiKey: "AIzaSyBYAOoCmEchNj40wIaqRWTWtB6CkVypVDA",
-    authDomain: "office-manager-app-b82c1.firebaseapp.com",
-    projectId: "office-manager-app-b82c1",
-    storageBucket: "office-manager-app-b82c1.firebasestorage.app",
+    apiKey:            "AIzaSyBYAOoCmEchNj40wIaqRWTWtB6CkVypVDA",
+    authDomain:        "office-manager-app-b82c1.firebaseapp.com",
+    projectId:         "office-manager-app-b82c1",
+    storageBucket:     "office-manager-app-b82c1.firebasestorage.app",
     messagingSenderId: "579154430165",
-    appId: "1:579154430165:web:03f05d5c1bfc5472a2fa5c"
+    appId:             "1:579154430165:web:03f05d5c1bfc5472a2fa5c"
   };
 
-  const app      = initializeApp(firebaseConfig);
-  const auth     = getAuth(app);
-  const db       = getFirestore(app);
-  const provider = new GoogleAuthProvider();
+  const firebaseApp = initializeApp(firebaseConfig);
+  const auth        = getAuth(firebaseApp);
+  const db          = getFirestore(firebaseApp);
+  const provider    = new GoogleAuthProvider();
 
-  // ── LOGIN BUTTON ───────────────────────────────────
-  document.getElementById("btn-google-login").addEventListener("click", async () => {
-    try {
-      const result = await signInWithPopup(auth, provider);
-      const email  = result.user.email;
-      if (!ALLOWED_EMAILS.includes(email)) {
-        await signOut(auth);
-        document.getElementById("login-error").style.display = "block";
-      }
-    } catch(e) {
-      console.error("Login error:", e);
-    }
-  });
-
-  // ── AUTH STATE ─────────────────────────────────────
-  onAuthStateChanged(auth, user => {
-    if (user && ALLOWED_EMAILS.includes(user.email)) {
-      // Authorized — show app
-      document.getElementById("login-screen").style.display  = "none";
-      document.getElementById("app-wrapper").style.display   = "block";
-      // Add user info + logout button to header
-      let userEl = document.getElementById("user-info");
-      if (!userEl) {
-        userEl = document.createElement("div");
-        userEl.id = "user-info";
-        userEl.style.cssText = "display:flex;align-items:center;gap:10px;font-size:0.78rem;color:var(--muted);font-family:DM Mono,monospace";
-        userEl.innerHTML = '<img src="' + (user.photoURL||'') + '" style="width:28px;height:28px;border-radius:50%;border:2px solid var(--cyan)" onerror="this.style.display=\'none\'">'
-          + '<span style="margin-left:4px">' + (user.displayName || user.email) + '</span>'
-          + '<button onclick="firebaseSignOut()" style="background:rgba(239,68,68,0.1);color:var(--red);border:1px solid rgba(239,68,68,0.3);border-radius:6px;padding:3px 10px;font-size:0.7rem;cursor:pointer;font-family:Syne,sans-serif;margin-left:4px">Salir</button>';
-        document.querySelector(".header-right").appendChild(userEl);
-      }
-      startListeners();
-    } else {
-      // Not authorized — show login
-      document.getElementById("login-screen").style.display  = "flex";
-      document.getElementById("app-wrapper").style.display   = "none";
-    }
-  });
-
-  window.firebaseSignOut = () => signOut(auth);
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyBYAOoCmEchNj40wIaqRWTWtB6CkVypVDA",
-    authDomain: "office-manager-app-b82c1.firebaseapp.com",
-    projectId: "office-manager-app-b82c1",
-    storageBucket: "office-manager-app-b82c1.firebasestorage.app",
-    messagingSenderId: "579154430165",
-    appId: "1:579154430165:web:03f05d5c1bfc5472a2fa5c"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db  = getFirestore(app);
-
-  // ── WRITE HELPERS ──────────────────────────────────
+  // Write helpers
   window.fbSet = async (col, id, data) => {
-    try { await setDoc(doc(db, col, id), data); } catch(e) { console.error('fbSet error:', e); }
+    try { await setDoc(doc(db, col, id), data); } catch(e) { console.error("fbSet:", e); }
   };
   window.fbDelete = async (col, id) => {
-    try { await deleteDoc(doc(db, col, id)); } catch(e) { console.error('fbDelete error:', e); }
+    try { await deleteDoc(doc(db, col, id)); } catch(e) { console.error("fbDelete:", e); }
   };
 
-  // ── REAL-TIME LISTENERS ────────────────────────────
+  // Realtime listeners
   function startListeners() {
-    showSyncStatus('⟳ Conectando...', 'var(--cyan)');
-
-    // Empleados
-    onSnapshot(collection(db, 'empleados'), snap => {
+    showSyncStatus("Conectando...", "var(--cyan)");
+    onSnapshot(collection(db, "empleados"), snap => {
       if (snap.empty) return;
       employees = snap.docs.map(d => d.data());
-      DB.set('employees', employees);
+      DB.set("employees", employees);
       renderDashboard();
-      const active = document.querySelector('.tab-content.active');
-      if (active && active.id === 'tab-employees') renderEmployees();
-      if (active && active.id === 'tab-asistencia') renderWeek();
+      const a = document.querySelector(".tab-content.active");
+      if (a && a.id === "tab-employees") renderEmployees();
+      if (a && a.id === "tab-asistencia") renderWeek();
     });
-
-    // Check-ins
-    onSnapshot(collection(db, 'checkins'), snap => {
+    onSnapshot(collection(db, "checkins"), snap => {
       checkins = snap.docs.map(d => d.data());
-      DB.set('checkins', checkins);
+      DB.set("checkins", checkins);
       renderDashboard();
-      const active = document.querySelector('.tab-content.active');
-      if (active && active.id === 'tab-checkin') renderCheckin();
+      const a = document.querySelector(".tab-content.active");
+      if (a && a.id === "tab-checkin") renderCheckin();
     });
-
-    // Tareas
-    onSnapshot(collection(db, 'tasks'), snap => {
+    onSnapshot(collection(db, "tasks"), snap => {
       tasks = snap.docs.map(d => d.data());
-      DB.set('tasks', tasks);
+      DB.set("tasks", tasks);
       renderDashboard();
-      const active = document.querySelector('.tab-content.active');
-      if (active && active.id === 'tab-tasks') renderTasks();
+      const a = document.querySelector(".tab-content.active");
+      if (a && a.id === "tab-tasks") renderTasks();
     });
-
-    // Asistencia records
-    onSnapshot(collection(db, 'asistencia'), snap => {
+    onSnapshot(collection(db, "asistencia"), snap => {
       attState.records = {};
       snap.docs.forEach(d => { attState.records[d.id] = d.data(); });
-      localStorage.setItem('om_att', JSON.stringify(attState));
-      const active = document.querySelector('.tab-content.active');
-      if (active && active.id === 'tab-asistencia') renderWeek();
+      localStorage.setItem("om_att", JSON.stringify(attState));
+      const a = document.querySelector(".tab-content.active");
+      if (a && a.id === "tab-asistencia") renderWeek();
     });
-
-    // Permisos / eventos
-    onSnapshot(collection(db, 'permisos'), snap => {
+    onSnapshot(collection(db, "permisos"), snap => {
       attState.events = snap.docs.map(d => d.data());
-      localStorage.setItem('om_att', JSON.stringify(attState));
-      const active = document.querySelector('.tab-content.active');
-      if (active && active.id === 'tab-eventos') renderEvents();
+      localStorage.setItem("om_att", JSON.stringify(attState));
+      const a = document.querySelector(".tab-content.active");
+      if (a && a.id === "tab-eventos") renderEvents();
     });
-
-    // Horas por reponer
-    onSnapshot(collection(db, 'horas'), snap => {
+    onSnapshot(collection(db, "horas"), snap => {
       attState.hours = snap.docs.map(d => d.data());
-      localStorage.setItem('om_att', JSON.stringify(attState));
-      const active = document.querySelector('.tab-content.active');
-      if (active && active.id === 'tab-horas') renderHours();
-      showSyncStatus('● En línea', 'var(--green)');
+      localStorage.setItem("om_att", JSON.stringify(attState));
+      const a = document.querySelector(".tab-content.active");
+      if (a && a.id === "tab-horas") renderHours();
+      showSyncStatus("En linea", "var(--green)");
     });
   }
 
-  // ── EXPOSE FB FUNCTIONS TO GLOBAL SCOPE ───────────
-  window.fbDB = db;
-  window.fbCol = collection;
-  window.fbDoc = doc;
-  window.fbSetDoc = setDoc;
-  window.fbDeleteDoc = deleteDoc;
+  // Login button
+  document.getElementById("btn-google-login").addEventListener("click", async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      if (!ALLOWED_EMAILS.includes(result.user.email)) {
+        await signOut(auth);
+        document.getElementById("login-error").style.display = "block";
+        document.getElementById("login-error").textContent = "Tu cuenta no tiene acceso a esta aplicacion.";
+      }
+    } catch(e) {
+      console.error("Login error:", e.code, e.message);
+      const errEl = document.getElementById("login-error");
+      errEl.style.display = "block";
+      errEl.textContent = "Error: " + (e.code || e.message);
+    }
+  });
 
-  // Start listening
-  startListeners();
+  // Auth state
+  onAuthStateChanged(auth, user => {
+    if (user && ALLOWED_EMAILS.includes(user.email)) {
+      document.getElementById("login-screen").style.display = "none";
+      document.getElementById("app-wrapper").style.display  = "block";
+      if (!document.getElementById("user-info")) {
+        const el = document.createElement("div");
+        el.id = "user-info";
+        el.style.cssText = "display:flex;align-items:center;gap:8px;font-size:0.78rem;color:var(--muted);font-family:DM Mono,monospace";
+        const photo = user.photoURL ? '<img src="' + user.photoURL + '" style="width:28px;height:28px;border-radius:50%;border:2px solid var(--cyan)">' : '';
+        el.innerHTML = photo
+          + '<span>' + (user.displayName || user.email) + '</span>'
+          + '<button onclick="window.fbSignOut()" style="background:rgba(239,68,68,0.1);color:#ef4444;border:1px solid rgba(239,68,68,0.3);border-radius:6px;padding:3px 10px;font-size:0.7rem;cursor:pointer">Salir</button>';
+        document.querySelector(".header-right").appendChild(el);
+      }
+      startListeners();
+    } else {
+      document.getElementById("login-screen").style.display = "flex";
+      document.getElementById("app-wrapper").style.display  = "none";
+    }
+  });
+
+  window.fbSignOut = () => signOut(auth);
 </script>
-
 
 </div><!-- end app-wrapper -->
 </body>

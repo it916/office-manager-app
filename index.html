@@ -523,13 +523,27 @@ let attState = (() => {
 })();
 
 function defAttState() { return { records:{}, events:[], hours:[], log:[] }; }
-function saveAtt() { localStorage.setItem('om_att', JSON.stringify(attState)); }
+function saveAtt() {
+  localStorage.setItem('om_att', JSON.stringify(attState));
+  // Sync to Firebase if available
+  if (window.fbSet) {
+    Object.entries(attState.records).forEach(([key, rec]) => window.fbSet('asistencia', key, rec));
+    attState.events.forEach(ev => window.fbSet('permisos', ev.id, ev));
+    attState.hours.forEach(h => window.fbSet('horas', h.id, h));
+  }
+}
 
 function saveMain() {
   DB.set('employees', employees);
   DB.set('checkins', checkins);
   DB.set('tasks', tasks);
   DB.set('log', mainLog);
+  // Sync to Firebase if available
+  if (window.fbSet) {
+    employees.forEach(e => window.fbSet('empleados', e.id, e));
+    checkins.forEach(c => window.fbSet('checkins', c.id, c));
+    tasks.forEach(t => window.fbSet('tasks', t.id, t));
+  }
 }
 
 function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
@@ -759,7 +773,7 @@ function quickCheckin(empId,type) {
   else{if(ci)ci.timeOut=time;else checkins.push({id:uid(),empId,date:today,timeIn:null,timeOut:time,mode:'remoto'});addMainLog(empId,`Salida rápida a las ${time}`,'info');}
   saveMain(); renderDashboard();
 }
-function deleteCheckin(ciId){checkins=checkins.filter(c=>c.id!==ciId);saveMain();renderCheckin();renderDashboard();}
+function deleteCheckin(ciId){if(window.fbDelete)window.fbDelete("checkins",ciId);checkins=checkins.filter(c=>c.id!==ciId);saveMain();renderCheckin();renderDashboard();}
 
 // Task modal
 function openTaskModal(empId) {
@@ -790,7 +804,7 @@ function saveTask(){
   else{tasks.push({id:uid(),empId,name,status,priority,note});addMainLog(empId,`Nueva tarea: "${name}"`,status==='help'?'help':'info');}
   saveMain();closeModal('modal-task');renderTasks();renderDashboard();
 }
-function deleteTask(id){tasks=tasks.filter(t=>t.id!==id);saveMain();renderTasks();renderDashboard();}
+function deleteTask(id){if(window.fbDelete)window.fbDelete("tasks",id);tasks=tasks.filter(t=>t.id!==id);saveMain();renderTasks();renderDashboard();}
 
 // Employee modal
 function openEmpModal(){
@@ -820,7 +834,9 @@ function saveEmployee(){
 function deleteEmployee(id){
   const e=getEmpById(id);if(!confirm(`¿Eliminar a ${e?.name}?`))return;
   employees=employees.filter(x=>x.id!==id);checkins=checkins.filter(c=>c.empId!==id);tasks=tasks.filter(t=>t.empId!==id);
-  addMainLog('system',`Empleado "${e?.name}" eliminado.`,'warn');saveMain();renderEmployees();renderDashboard();
+  addMainLog('system',`Empleado "${e?.name}" eliminado.`,'warn');
+  if(window.fbDelete){ window.fbDelete('empleados',id); }
+  saveMain();renderEmployees();renderDashboard();
 }
 
 // ═══════════════════════════════════════
@@ -918,7 +934,9 @@ function saveEvent(){
 }
 function deleteEvent(id){
   const ev=attState.events.find(e=>e.id===id);if(!confirm('¿Eliminar este evento?'))return;
-  attState.events=attState.events.filter(e=>e.id!==id);addAttLog(`Evento eliminado: ${getEmpById(ev?.empId)?.name}`);saveAtt();renderEvents();
+  attState.events=attState.events.filter(e=>e.id!==id);addAttLog(`Evento eliminado: ${getEmpById(ev?.empId)?.name}`);
+  if(window.fbDelete)window.fbDelete("permisos",id);
+  saveAtt();renderEvents();
 }
 
 // ═══════════════════════════════════════
@@ -952,7 +970,7 @@ function saveHours(){
   saveAtt();closeModal('modal-hours');renderHours();
 }
 function markHoursDone(id){const h=attState.hours.find(x=>x.id===id);if(h){h.done=true;addAttLog(`${getEmpById(h.empId)?.name} — horas repuestas (${h.amount}h)`);}saveAtt();renderHours();}
-function deleteHours(id){attState.hours=attState.hours.filter(h=>h.id!==id);saveAtt();renderHours();}
+function deleteHours(id){if(window.fbDelete)window.fbDelete("horas",id);attState.hours=attState.hours.filter(h=>h.id!==id);saveAtt();renderHours();}
 
 // ═══════════════════════════════════════
 //  NOTE MODAL
@@ -967,13 +985,14 @@ function saveNote(){
   closeModal('modal-note');renderWeek();
 }
 
-// ═══════════════════════════════════════
-//  GOOGLE SHEETS SYNC
-// ═══════════════════════════════════════
-const API_URL = 'https://script.google.com/macros/s/AKfycbywsnNk8evmJ9m82XagoZUU9-L0xJyu0ta6n1do5JfLeiUlCy092IcE99SoFdGYoRrq/exec';
 
-// Indicador de sync en el header
-function showSyncStatus(msg, color='var(--cyan)') {
+// ═══════════════════════════════════════
+//  FIREBASE — TIEMPO REAL
+// ═══════════════════════════════════════
+
+// Indicador de estado en el header
+function showSyncStatus(msg, color) {
+  color = color || 'var(--cyan)';
   let el = document.getElementById('sync-status');
   if (!el) {
     el = document.createElement('div');
@@ -981,150 +1000,116 @@ function showSyncStatus(msg, color='var(--cyan)') {
     el.style.cssText = 'font-family:"DM Mono",monospace;font-size:0.72rem;padding:4px 12px;border-radius:20px;border:1px solid;transition:all 0.3s';
     document.querySelector('.header-right').prepend(el);
   }
+  const colorMap = {'var(--cyan)':'25,205,235','var(--green)':'34,197,94','var(--red)':'239,68,68','var(--yellow)':'245,158,11'};
+  const rgb = colorMap[color] || '25,205,235';
   el.textContent = msg;
   el.style.color = color;
   el.style.borderColor = color;
-  el.style.background = color.replace(')',',0.1)').replace('var(','rgba(').replace('--cyan','25,205,235').replace('--green','34,197,94').replace('--red','239,68,68');
+  el.style.background = 'rgba('+rgb+',0.1)';
 }
-
-// Convierte localStorage → formato Sheets
-function buildSyncPayload() {
-  // Asistencia: convierte records object → array de filas
-  const attRecords = Object.entries(attState.records).map(([key, rec]) => {
-    const [empId, fecha] = key.split('_');
-    return {
-      ID: key, EmpleadoID: empId, Fecha: fecha,
-      Conectado:  rec.connected  ? 'TRUE' : 'FALSE',
-      Meeting:    rec.meeting    ? 'TRUE' : 'FALSE',
-      Ausente:    rec.absent     ? 'TRUE' : 'FALSE',
-      Tarde:      rec.late       ? 'TRUE' : 'FALSE',
-      Permiso:    rec.permission ? 'TRUE' : 'FALSE',
-      Vacaciones: rec.vacation   ? 'TRUE' : 'FALSE',
-      Nota:       rec.note || ''
-    };
-  });
-
-  return {
-    empleados: employees.map(e => ({
-      ID: e.id, Nombre: e.name, Cargo: e.role,
-      Departamento: e.dept, Email: e.email,
-      FechaCreacion: e.created || todayStr()
-    })),
-    checkins: checkins.map(c => ({
-      ID: c.id, EmpleadoID: c.empId, Fecha: c.date,
-      HoraEntrada: c.timeIn || '', HoraSalida: c.timeOut || '',
-      Modalidad: c.mode || ''
-    })),
-    asistencia: attRecords,
-    eventos: attState.events.map(ev => ({
-      ID: ev.id, EmpleadoID: ev.empId, Tipo: ev.type,
-      FechaInicio: ev.start, FechaFin: ev.end,
-      Descripcion: ev.desc || '', FechaRegistro: todayStr()
-    })),
-    horas: attState.hours.map(h => ({
-      ID: h.id, EmpleadoID: h.empId, Horas: h.amount,
-      Motivo: h.reason, FechaAcordada: h.date,
-      Repuesto: h.done ? 'TRUE' : 'FALSE', FechaRegistro: todayStr()
-    }))
-  };
-}
-
-// Envía todo a Sheets
-async function syncToSheets() {
-  showSyncStatus('⟳ Sincronizando...');
-  try {
-    const payload = buildSyncPayload();
-    const res = await fetch(API_URL, {
-      method: 'POST',
-      body: JSON.stringify({ action: 'syncAll', data: payload })
-    });
-    const json = await res.json();
-    if (json.success) {
-      showSyncStatus('✓ Sincronizado', 'var(--green)');
-      setTimeout(() => showSyncStatus('● En línea', 'var(--green)'), 3000);
-    } else {
-      showSyncStatus('✕ Error sync', 'var(--red)');
-      console.error('Sync error:', json.error);
-    }
-  } catch(err) {
-    showSyncStatus('✕ Sin conexión', 'var(--red)');
-    console.error('Fetch error:', err);
-  }
-}
-
-// Carga datos desde Sheets al iniciar
-async function loadFromSheets() {
-  showSyncStatus('⟳ Cargando...');
-  try {
-    // Cargar empleados
-    const [empRes, ciRes, attRes, evRes, hrRes] = await Promise.all([
-      fetch(`${API_URL}?action=getAll&sheet=empleados`),
-      fetch(`${API_URL}?action=getAll&sheet=checkin`),
-      fetch(`${API_URL}?action=getAll&sheet=asistencia`),
-      fetch(`${API_URL}?action=getAll&sheet=permisos`),
-      fetch(`${API_URL}?action=getAll&sheet=horas`),
-    ]);
-
-    const [empData, ciData, attData, evData, hrData] = await Promise.all([
-      empRes.json(), ciRes.json(), attRes.json(), evRes.json(), hrRes.json()
-    ]);
-
-    // Solo reemplaza si hay datos en Sheets
-    if (Array.isArray(empData) && empData.length > 0) {
-      employees = empData.map(r => ({ id:r.ID, name:r.Nombre, role:r.Cargo, dept:r.Departamento, email:r.Email, created:r.FechaCreacion }));
-      DB.set('employees', employees);
-    }
-
-    if (Array.isArray(ciData) && ciData.length > 0) {
-      checkins = ciData.map(r => ({ id:r.ID, empId:r.EmpleadoID, date:r.Fecha, timeIn:r.HoraEntrada, timeOut:r.HoraSalida, mode:r.Modalidad }));
-      DB.set('checkins', checkins);
-    }
-
-    if (Array.isArray(attData) && attData.length > 0) {
-      attState.records = {};
-      attData.forEach(r => {
-        attState.records[r.ID] = {
-          connected:  r.Conectado  === 'TRUE',
-          meeting:    r.Meeting    === 'TRUE',
-          absent:     r.Ausente    === 'TRUE',
-          late:       r.Tarde      === 'TRUE',
-          permission: r.Permiso    === 'TRUE',
-          vacation:   r.Vacaciones === 'TRUE',
-          note:       r.Nota || ''
-        };
-      });
-    }
-
-    if (Array.isArray(evData) && evData.length > 0) {
-      attState.events = evData.map(r => ({ id:r.ID, empId:r.EmpleadoID, type:r.Tipo, start:r.FechaInicio, end:r.FechaFin, desc:r.Descripcion }));
-    }
-
-    if (Array.isArray(hrData) && hrData.length > 0) {
-      attState.hours = hrData.map(r => ({ id:r.ID, empId:r.EmpleadoID, amount:parseFloat(r.Horas)||0, reason:r.Motivo, date:r.FechaAcordada, done:r.Repuesto==='TRUE' }));
-    }
-
-    saveAtt();
-    showSyncStatus('● En línea', 'var(--green)');
-    renderDashboard();
-
-  } catch(err) {
-    showSyncStatus('⚠ Offline', 'var(--yellow)');
-    console.warn('Cargando desde localStorage:', err);
-    renderDashboard();
-  }
-}
-
-// Auto-sync cada vez que se guardan datos
-const _origSaveMain = saveMain;
-saveMain = function() { _origSaveMain(); syncToSheets(); };
-const _origSaveAtt = saveAtt;
-saveAtt = function() { localStorage.setItem('om_att', JSON.stringify(attState)); syncToSheets(); };
 
 // ═══════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════
 seedDemo();
-loadFromSheets();
+renderDashboard();
 </script>
+
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBYAOoCmEchNj40wIaqRWTWtB6CkVypVDA",
+    authDomain: "office-manager-app-b82c1.firebaseapp.com",
+    projectId: "office-manager-app-b82c1",
+    storageBucket: "office-manager-app-b82c1.firebasestorage.app",
+    messagingSenderId: "579154430165",
+    appId: "1:579154430165:web:03f05d5c1bfc5472a2fa5c"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getFirestore(app);
+
+  // ── WRITE HELPERS ──────────────────────────────────
+  window.fbSet = async (col, id, data) => {
+    try { await setDoc(doc(db, col, id), data); } catch(e) { console.error('fbSet error:', e); }
+  };
+  window.fbDelete = async (col, id) => {
+    try { await deleteDoc(doc(db, col, id)); } catch(e) { console.error('fbDelete error:', e); }
+  };
+
+  // ── REAL-TIME LISTENERS ────────────────────────────
+  function startListeners() {
+    showSyncStatus('⟳ Conectando...', 'var(--cyan)');
+
+    // Empleados
+    onSnapshot(collection(db, 'empleados'), snap => {
+      if (snap.empty) return;
+      employees = snap.docs.map(d => d.data());
+      DB.set('employees', employees);
+      renderDashboard();
+      const active = document.querySelector('.tab-content.active');
+      if (active && active.id === 'tab-employees') renderEmployees();
+      if (active && active.id === 'tab-asistencia') renderWeek();
+    });
+
+    // Check-ins
+    onSnapshot(collection(db, 'checkins'), snap => {
+      checkins = snap.docs.map(d => d.data());
+      DB.set('checkins', checkins);
+      renderDashboard();
+      const active = document.querySelector('.tab-content.active');
+      if (active && active.id === 'tab-checkin') renderCheckin();
+    });
+
+    // Tareas
+    onSnapshot(collection(db, 'tasks'), snap => {
+      tasks = snap.docs.map(d => d.data());
+      DB.set('tasks', tasks);
+      renderDashboard();
+      const active = document.querySelector('.tab-content.active');
+      if (active && active.id === 'tab-tasks') renderTasks();
+    });
+
+    // Asistencia records
+    onSnapshot(collection(db, 'asistencia'), snap => {
+      attState.records = {};
+      snap.docs.forEach(d => { attState.records[d.id] = d.data(); });
+      localStorage.setItem('om_att', JSON.stringify(attState));
+      const active = document.querySelector('.tab-content.active');
+      if (active && active.id === 'tab-asistencia') renderWeek();
+    });
+
+    // Permisos / eventos
+    onSnapshot(collection(db, 'permisos'), snap => {
+      attState.events = snap.docs.map(d => d.data());
+      localStorage.setItem('om_att', JSON.stringify(attState));
+      const active = document.querySelector('.tab-content.active');
+      if (active && active.id === 'tab-eventos') renderEvents();
+    });
+
+    // Horas por reponer
+    onSnapshot(collection(db, 'horas'), snap => {
+      attState.hours = snap.docs.map(d => d.data());
+      localStorage.setItem('om_att', JSON.stringify(attState));
+      const active = document.querySelector('.tab-content.active');
+      if (active && active.id === 'tab-horas') renderHours();
+      showSyncStatus('● En línea', 'var(--green)');
+    });
+  }
+
+  // ── EXPOSE FB FUNCTIONS TO GLOBAL SCOPE ───────────
+  window.fbDB = db;
+  window.fbCol = collection;
+  window.fbDoc = doc;
+  window.fbSetDoc = setDoc;
+  window.fbDeleteDoc = deleteDoc;
+
+  // Start listening
+  startListeners();
+</script>
+
 </body>
 </html>

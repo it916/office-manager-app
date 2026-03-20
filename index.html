@@ -331,6 +331,27 @@
   }
   .att-day-note:hover { color: var(--cyan); }
 
+  /* ── INLINE TABLE INPUTS ── */
+  .ci-inline {
+    background: var(--darker); border: 1px solid var(--border); color: var(--text);
+    font-family: 'DM Mono', monospace; font-size: 0.78rem; padding: 5px 8px;
+    border-radius: 6px; outline: none; transition: border-color 0.2s;
+    width: 100%; max-width: 120px; text-align: center;
+  }
+  .ci-inline:focus { border-color: var(--cyan); background: rgba(25,205,235,0.04); }
+  .ci-inline::-webkit-calendar-picker-indicator { filter: invert(0.6); cursor: pointer; }
+  .ci-inline-date { max-width: 140px; }
+  .ci-inline-wrap { display: flex; align-items: center; gap: 4px; }
+  .ci-save-dot {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--cyan);
+    opacity: 0; transition: opacity 0.3s; flex-shrink: 0;
+  }
+  .ci-save-dot.visible { opacity: 1; }
+  .ci-schedule-hint {
+    font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--muted2);
+    margin-top: 2px;
+  }
+
   /* ── EVENTS ── */
   .event-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.2rem; margin-bottom: 8px; display: flex; align-items: center; gap: 14px; transition: border-color 0.2s; }
   .event-card:hover { border-color: var(--border-hover); }
@@ -396,6 +417,8 @@
     .form-select option { background: #ffffff; color: #18161b; }
     .modal-overlay { background: rgba(0,0,0,0.35); }
     .tbox, .ci-row, .pstat { background: #f5f4f7; }
+    .ci-inline { background: #f0eff2; color: #18161b; }
+    .ci-inline:focus { background: #e8f7fa; }
     .btn-primary { color: #fff; }
     .badge.b-offline { background: rgba(107,103,112,0.1); border-color: rgba(107,103,112,0.2); }
     #login-screen { background: #f5f4f7; }
@@ -1008,24 +1031,91 @@ function openProfile(empId) {
 function renderCheckin() {
   const tbody = document.getElementById('checkin-table');
   if (!employees.length) { tbody.innerHTML=`<tr><td colspan="7" class="empty-state">No hay empleados.</td></tr>`; return; }
-  // Show today's checkins plus any without checkout
+
+  const today = todayStr();
   const rows = employees.map((e,i) => {
     const ci = getCheckinToday(e.id);
     const st = getEmpStatus(e.id);
     const worked = ci ? calcHours(ci.timeIn, ci.timeOut) : null;
+    const ciId = ci ? ci.id : '';
+    const schedIn = e.scheduleIn || '09:00';
+    const schedOut = e.scheduleOut || '17:00';
+
     return `<tr>
-      <td><div style="display:flex;align-items:center;gap:10px"><div class="ecard-avatar ${avatarClass(i)}" style="width:30px;height:30px;font-size:0.7rem;border-radius:7px">${empInitials(e.name)}</div><strong>${e.name}</strong></div></td>
-      <td style="font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--muted)">${ci?.date||'—'}</td>
-      <td style="font-family:'DM Mono',monospace">${ci?.timeIn||'—'}</td>
-      <td style="font-family:'DM Mono',monospace">${ci?.timeOut||'—'}</td>
-      <td style="font-family:'DM Mono',monospace;color:var(--green)">${worked?worked.display:'—'}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="ecard-avatar ${avatarClass(i)}" style="width:30px;height:30px;font-size:0.7rem;border-radius:7px">${empInitials(e.name)}</div>
+          <div>
+            <strong>${e.name}</strong>
+            <div class="ci-schedule-hint">🕐 ${schedIn} — ${schedOut}</div>
+          </div>
+        </div>
+      </td>
+      <td>
+        <input type="date" class="ci-inline ci-inline-date" value="${ci?.date||today}"
+          onchange="inlineUpdateCheckin('${e.id}','${ciId}','date',this.value)" />
+      </td>
+      <td>
+        <div class="ci-inline-wrap">
+          <input type="time" class="ci-inline" value="${ci?.timeIn||''}" placeholder="—"
+            onchange="inlineUpdateCheckin('${e.id}','${ciId}','timeIn',this.value)" />
+          <span class="ci-save-dot" id="dot-in-${e.id}"></span>
+        </div>
+      </td>
+      <td>
+        <div class="ci-inline-wrap">
+          <input type="time" class="ci-inline" value="${ci?.timeOut||''}" placeholder="—"
+            onchange="inlineUpdateCheckin('${e.id}','${ciId}','timeOut',this.value)" />
+          <span class="ci-save-dot" id="dot-out-${e.id}"></span>
+        </div>
+      </td>
+      <td style="font-family:'DM Mono',monospace;color:var(--green);font-size:0.82rem">${worked?worked.display:'—'}</td>
       <td><span class="badge ${statusBadge(st)}">${statusLabel(st)}</span></td>
       <td>
-        ${!ci||ci.timeOut?`<button class="btn btn-outline btn-xs" onclick="quickCheckin('${e.id}','in')">Entrada</button>`:`<button class="btn btn-outline btn-xs" onclick="quickCheckin('${e.id}','out')">Salida</button>`}
-        ${ci?`<button class="btn btn-danger btn-xs" style="margin-left:4px" onclick="deleteCheckin('${ci.id}')">✕</button>`:''}
+        ${!ci?`<button class="btn btn-outline btn-xs" onclick="quickCheckin('${e.id}','in')">⏱ Ahora</button>`
+          :ci.timeOut?`<button class="btn btn-outline btn-xs" onclick="quickCheckin('${e.id}','in')">↩ Re-entrada</button>`
+          :`<button class="btn btn-outline btn-xs" onclick="quickCheckin('${e.id}','out')">↪ Salida</button>`}
+        ${ci?`<button class="btn btn-danger btn-xs btn-icon" style="margin-left:4px" onclick="deleteCheckin('${ci.id}')">✕</button>`:''}
       </td></tr>`;
   });
   tbody.innerHTML = rows.join('');
+}
+
+// Inline edit: update or create checkin from table inputs
+function inlineUpdateCheckin(empId, ciId, field, value) {
+  let ci = ciId ? checkins.find(c=>c.id===ciId) : null;
+  const today = todayStr();
+
+  if (!ci) {
+    // Create new checkin record for this employee
+    ci = { id:uid(), empId, date:today, timeIn:null, timeOut:null, mode:'remoto', note:'' };
+    checkins.push(ci);
+  }
+
+  if (field === 'date') {
+    ci.date = value;
+    addMainLog(empId, `Fecha de registro ajustada a ${value}`, 'info');
+  } else if (field === 'timeIn') {
+    ci.timeIn = value;
+    addMainLog(empId, `Hora de entrada ajustada a ${value}`, 'info');
+    flashDot('dot-in-'+empId);
+  } else if (field === 'timeOut') {
+    ci.timeOut = value;
+    addMainLog(empId, `Hora de salida ajustada a ${value}`, 'info');
+    flashDot('dot-out-'+empId);
+  }
+
+  saveMain();
+  // Re-render only the worked hours and status without full table rebuild (smoother editing)
+  renderDashboard();
+  // Delayed soft re-render to update calculated columns
+  clearTimeout(window._ciRenderTimer);
+  window._ciRenderTimer = setTimeout(()=> renderCheckin(), 600);
+}
+
+function flashDot(dotId) {
+  const dot = document.getElementById(dotId);
+  if (dot) { dot.classList.add('visible'); setTimeout(()=> dot.classList.remove('visible'), 1200); }
 }
 
 function quickCheckin(empId, type) {

@@ -4,444 +4,283 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hero People · HR Management</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --cyan: #19CDEB; --blue: #0097CC; --royal: #0065F3;
-    --dark: #111013; --darker: #0a090c; --surface: #18171b;
-    --surface2: #201f24; --surface3: #28272c;
-    --border: rgba(255,255,255,0.06); --border-hover: rgba(25,205,235,0.25);
-    --text: #eae8ed; --muted: #7a7680; --muted2: #5a5660;
-    --green: #22c55e; --yellow: #f59e0b; --red: #ef4444;
-    --orange: #f97316; --purple: #a855f7;
-    --grad: linear-gradient(135deg, var(--cyan), var(--royal));
-    --glow: 0 0 30px rgba(25,205,235,0.08);
-    --radius: 14px; --radius-sm: 10px; --radius-xs: 7px;
+    --primary: #0097CC; --primary-light: #19CDEB; --royal: #0065F3;
+    --bg: #eef1f5; --surface: #ffffff; --surface2: #f8f9fb; --surface3: #f1f3f6;
+    --glass: rgba(255,255,255,0.72); --glass-border: rgba(255,255,255,0.85);
+    --border: rgba(0,0,0,0.08); --border-hover: rgba(0,151,204,0.35);
+    --text: #1a1d23; --text2: #3a3f4b; --muted: #6b7280; --muted2: #9ca3af;
+    --green: #10b981; --green-bg: #ecfdf5; --green-border: #a7f3d0;
+    --yellow: #f59e0b; --yellow-bg: #fffbeb; --yellow-border: #fde68a;
+    --red: #ef4444; --red-bg: #fef2f2; --red-border: #fecaca;
+    --orange: #f97316; --orange-bg: #fff7ed; --orange-border: #fed7aa;
+    --purple: #8b5cf6; --purple-bg: #f5f3ff; --purple-border: #ddd6fe;
+    --cyan-bg: #ecfeff; --cyan-border: #a5f3fc;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow: 0 4px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+    --shadow-lg: 0 10px 40px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+    --radius: 16px; --radius-sm: 12px; --radius-xs: 8px;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Syne', sans-serif; background: var(--darker); color: var(--text); min-height: 100vh; }
+  body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; -webkit-font-smoothing: antialiased; }
   ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--muted2); border-radius: 3px; }
 
   /* ── LOGIN ── */
-  #login-screen {
-    position: fixed; inset: 0; z-index: 9999;
-    background: var(--darker);
-    display: flex; align-items: center; justify-content: center;
-    overflow: hidden;
-  }
-  #login-screen::before {
-    content: ''; position: absolute; width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(25,205,235,0.06) 0%, transparent 70%);
-    top: 50%; left: 50%; transform: translate(-50%, -50%);
-    pointer-events: none;
-  }
-  .login-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 24px; padding: 3rem 2.5rem;
-    width: 90%; max-width: 400px; text-align: center;
-    position: relative; z-index: 1;
-    box-shadow: 0 24px 80px rgba(0,0,0,0.4);
-  }
-  .login-logo { width: 80px; height: 80px; border-radius: 50%; overflow: hidden; margin: 0 auto 1.5rem; border: 2px solid rgba(25,205,235,0.2); }
+  #login-screen { position: fixed; inset: 0; z-index: 9999; background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 50%, #ecfeff 100%); display: flex; align-items: center; justify-content: center; }
+  .login-card { background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 3rem 2.5rem; width: 90%; max-width: 400px; text-align: center; box-shadow: var(--shadow-lg); }
+  .login-logo { width: 80px; height: 80px; border-radius: 50%; overflow: hidden; margin: 0 auto 1.5rem; border: 3px solid var(--primary-light); box-shadow: 0 4px 16px rgba(0,151,204,0.15); }
   .login-logo img { width: 100%; height: 100%; object-fit: cover; }
-  .login-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 4px; letter-spacing: -0.02em; }
-  .login-sub { font-size: 0.72rem; color: var(--muted); font-family: "DM Mono", monospace; margin-bottom: 2.5rem; letter-spacing: 0.15em; text-transform: uppercase; }
-  .btn-google {
-    display: flex; align-items: center; justify-content: center; gap: 12px;
-    width: 100%; padding: 14px 20px; border-radius: var(--radius-sm);
-    background: #fff; color: #333; font-family: "Syne", sans-serif;
-    font-size: 0.88rem; font-weight: 700; border: none; cursor: pointer;
-    transition: all 0.2s; box-shadow: 0 2px 12px rgba(0,0,0,0.2);
-  }
-  .btn-google:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.3); transform: translateY(-2px); }
+  .login-title { font-size: 1.5rem; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+  .login-title span { color: var(--primary); }
+  .login-sub { font-size: 0.72rem; color: var(--muted); font-family: 'DM Mono', monospace; margin-bottom: 2.5rem; letter-spacing: 0.12em; text-transform: uppercase; }
+  .btn-google { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; padding: 14px 20px; border-radius: var(--radius-xs); background: var(--surface); color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 600; border: 1px solid var(--border); cursor: pointer; transition: all 0.2s; box-shadow: var(--shadow-sm); }
+  .btn-google:hover { box-shadow: var(--shadow); border-color: var(--primary); transform: translateY(-1px); }
   .btn-google img { width: 20px; height: 20px; }
   .login-error { margin-top: 1.2rem; font-size: 0.78rem; color: var(--red); display: none; font-family: 'DM Mono', monospace; }
   #app-wrapper { display: none; }
 
   /* ── HEADER ── */
-  header {
-    background: var(--dark); border-bottom: 1px solid var(--border);
-    padding: 0 2rem; display: flex; align-items: center;
-    justify-content: space-between; height: 60px;
-    position: sticky; top: 0; z-index: 100;
-    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-  }
-  .logo { display: flex; align-items: center; gap: 14px; }
-  .logo-icon { width: 36px; height: 36px; border-radius: 10px; overflow: hidden; flex-shrink: 0; border: 1px solid var(--border); }
+  header { background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; height: 64px; position: sticky; top: 0; z-index: 100; }
+  .logo { display: flex; align-items: center; gap: 12px; }
+  .logo-icon { width: 40px; height: 40px; border-radius: 50%; overflow: hidden; flex-shrink: 0; border: 2px solid rgba(0,151,204,0.2); }
   .logo-icon img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .logo h1 { font-size: 1rem; font-weight: 800; letter-spacing: -0.02em; }
-  .logo h1 span { color: var(--cyan); }
-  .logo-sub { font-size: 0.62rem; color: var(--muted); font-family: 'DM Mono', monospace; letter-spacing: 0.12em; text-transform: uppercase; }
+  .logo h1 { font-size: 1.05rem; font-weight: 800; color: var(--text); }
+  .logo h1 span { color: var(--primary); }
+  .logo-sub { font-size: 0.6rem; color: var(--muted); font-family: 'DM Mono', monospace; letter-spacing: 0.1em; }
   .header-right { display: flex; align-items: center; gap: 14px; }
-  #live-clock {
-    font-family: 'DM Mono', monospace; font-size: 0.8rem; color: var(--cyan);
-    background: rgba(25,205,235,0.06); padding: 5px 14px; border-radius: 20px;
-    border: 1px solid rgba(25,205,235,0.12);
-  }
+  #live-clock { font-family: 'DM Mono', monospace; font-size: 0.82rem; font-weight: 500; color: var(--primary); }
   .date-display { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted); }
 
-  /* ── SIDEBAR NAV ── */
-  .app-layout { display: flex; min-height: calc(100vh - 60px); }
-  .sidebar {
-    width: 220px; min-width: 220px; background: var(--dark);
-    border-right: 1px solid var(--border); padding: 1.2rem 0;
-    display: flex; flex-direction: column; gap: 2px;
-    position: sticky; top: 60px; height: calc(100vh - 60px);
-    overflow-y: auto;
-  }
-  .nav-section { padding: 0 1rem; margin-bottom: 4px; }
-  .nav-label { font-size: 0.58rem; font-family: 'DM Mono', monospace; color: var(--muted2); letter-spacing: 0.16em; text-transform: uppercase; padding: 12px 12px 6px; }
-  .nav-btn {
-    display: flex; align-items: center; gap: 10px; width: 100%;
-    padding: 9px 12px; border: none; background: transparent;
-    color: var(--muted); font-family: 'Syne', sans-serif; font-size: 0.82rem;
-    font-weight: 600; cursor: pointer; border-radius: var(--radius-xs);
-    transition: all 0.15s; text-align: left; margin: 0 8px; width: calc(100% - 16px);
-  }
-  .nav-btn:hover { color: var(--text); background: rgba(255,255,255,0.03); }
-  .nav-btn.active { color: var(--cyan); background: rgba(25,205,235,0.08); }
-  .nav-btn .nav-icon { font-size: 1rem; width: 22px; text-align: center; flex-shrink: 0; }
-  .nav-btn .nav-count {
-    margin-left: auto; font-family: 'DM Mono', monospace; font-size: 0.65rem;
-    background: rgba(255,255,255,0.05); padding: 2px 8px; border-radius: 10px;
-    color: var(--muted2);
-  }
+  /* ── SIDEBAR ── */
+  .app-layout { display: flex; min-height: calc(100vh - 64px); }
+  .sidebar { width: 200px; min-width: 200px; background: var(--surface); border-right: 1px solid var(--border); padding: 1rem 0; display: flex; flex-direction: column; gap: 1px; position: sticky; top: 64px; height: calc(100vh - 64px); overflow-y: auto; }
+  .nav-label { font-size: 0.6rem; font-family: 'DM Mono', monospace; color: var(--muted2); letter-spacing: 0.14em; text-transform: uppercase; padding: 14px 16px 6px; }
+  .nav-btn { display: flex; align-items: center; gap: 10px; width: calc(100% - 16px); padding: 9px 14px; border: none; background: transparent; color: var(--muted); font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 500; cursor: pointer; border-radius: var(--radius-xs); transition: all 0.15s; text-align: left; margin: 0 8px; }
+  .nav-btn:hover { color: var(--text); background: var(--surface3); }
+  .nav-btn.active { color: var(--primary); background: var(--cyan-bg); font-weight: 600; }
+  .nav-btn .nav-icon { font-size: 1rem; width: 20px; text-align: center; flex-shrink: 0; }
+  .nav-btn .nav-count { margin-left: auto; font-family: 'DM Mono', monospace; font-size: 0.62rem; background: var(--surface3); padding: 2px 7px; border-radius: 10px; color: var(--muted); }
 
   /* ── MAIN ── */
-  .main-content { flex: 1; padding: 2rem; max-width: 1200px; overflow-x: hidden; }
-  .tab-content { display: none; animation: fadeIn 0.25s ease; }
+  .main-content { flex: 1; padding: 1.5rem 2rem; max-width: 1200px; overflow-x: hidden; }
+  .tab-content { display: none; animation: fadeIn 0.2s ease; }
   .tab-content.active { display: block; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
   /* ── PAGE HEADER ── */
-  .page-header { margin-bottom: 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
-  .page-title { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.02em; }
-  .page-desc { font-size: 0.78rem; color: var(--muted); font-family: 'DM Mono', monospace; margin-top: 2px; }
+  .page-header { margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+  .page-title { font-size: 1.2rem; font-weight: 800; color: var(--text); }
+  .page-desc { font-size: 0.75rem; color: var(--muted); font-family: 'DM Mono', monospace; margin-top: 2px; }
 
-  /* ── STATS ── */
-  .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 2rem; }
-  .stat {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 1.1rem 1.2rem;
-    position: relative; overflow: hidden; transition: border-color 0.2s;
-  }
-  .stat:hover { border-color: var(--border-hover); }
-  .stat::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
-  .stat.st-total::after  { background: var(--cyan); }
-  .stat.st-online::after { background: var(--green); }
-  .stat.st-off::after    { background: var(--muted); }
-  .stat.st-perm::after   { background: var(--purple); }
-  .stat.st-hours::after  { background: var(--orange); }
-  .stat.st-meet::after   { background: var(--cyan); }
-  .stat.st-absent::after { background: var(--red); }
-  .stat.st-late::after   { background: var(--yellow); }
-  .stat-label { font-size: 0.62rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; font-family: 'DM Mono', monospace; }
-  .stat-val { font-size: 1.8rem; font-weight: 800; line-height: 1; }
-  .st-total .stat-val   { color: var(--cyan); }
-  .st-online .stat-val  { color: var(--green); }
-  .st-off .stat-val     { color: var(--muted); }
-  .st-perm .stat-val    { color: var(--purple); }
-  .st-hours .stat-val   { color: var(--orange); }
-  .st-meet .stat-val    { color: var(--cyan); }
-  .st-absent .stat-val  { color: var(--red); }
-  .st-late .stat-val    { color: var(--yellow); }
+  /* ── STAT CARDS ── */
+  .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; margin-bottom: 1.5rem; }
+  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.2rem 1.4rem; box-shadow: var(--shadow-sm); display: flex; align-items: flex-start; gap: 14px; transition: box-shadow 0.2s, border-color 0.2s; }
+  .stat:hover { box-shadow: var(--shadow); border-color: var(--border-hover); }
+  .stat-icon { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+  .stat-icon.si-total { background: var(--cyan-bg); color: var(--primary); }
+  .stat-icon.si-online { background: var(--green-bg); color: var(--green); }
+  .stat-icon.si-off { background: var(--surface3); color: var(--muted); }
+  .stat-icon.si-perm { background: var(--purple-bg); color: var(--purple); }
+  .stat-icon.si-hours { background: var(--orange-bg); color: var(--orange); }
+  .stat-icon.si-meet { background: var(--cyan-bg); color: var(--primary); }
+  .stat-icon.si-absent { background: var(--red-bg); color: var(--red); }
+  .stat-icon.si-late { background: var(--yellow-bg); color: var(--yellow); }
+  .stat-body { flex: 1; min-width: 0; }
+  .stat-label { font-size: 0.68rem; color: var(--muted); font-weight: 500; margin-bottom: 4px; }
+  .stat-val { font-size: 1.6rem; font-weight: 800; line-height: 1; color: var(--text); }
 
   /* ── BUTTONS ── */
-  .btn {
-    padding: 8px 18px; border-radius: var(--radius-xs); border: none;
-    font-family: 'Syne', sans-serif; font-size: 0.78rem; font-weight: 600;
-    cursor: pointer; transition: all 0.15s; letter-spacing: 0.02em;
-    display: inline-flex; align-items: center; gap: 6px;
-  }
-  .btn-primary { background: var(--grad); color: #fff; }
-  .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(25,205,235,0.2); }
-  .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
-  .btn-outline:hover { border-color: var(--cyan); color: var(--cyan); }
-  .btn-danger { background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
-  .btn-danger:hover { background: rgba(239,68,68,0.2); }
-  .btn-sm { padding: 5px 12px; font-size: 0.72rem; }
-  .btn-xs { padding: 3px 8px; font-size: 0.68rem; }
+  .btn { padding: 8px 16px; border-radius: var(--radius-xs); border: none; font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px; }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-primary:hover { background: #0085b5; box-shadow: 0 2px 8px rgba(0,151,204,0.25); transform: translateY(-1px); }
+  .btn-outline { background: var(--surface); border: 1px solid var(--border); color: var(--text2); }
+  .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+  .btn-outline.active-toggle { border-color: var(--primary); color: var(--primary); background: var(--cyan-bg); }
+  .btn-danger { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+  .btn-danger:hover { background: #fde8e8; }
+  .btn-sm { padding: 6px 12px; font-size: 0.72rem; }
+  .btn-xs { padding: 4px 8px; font-size: 0.68rem; }
   .btn-icon { padding: 5px 8px; }
 
-  /* ── EMPLOYEE GRID (Dashboard) ── */
-  .emp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 14px; }
-  .emp-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 1.4rem;
-    transition: all 0.2s; cursor: pointer; position: relative;
-  }
-  .emp-card:hover { border-color: var(--border-hover); box-shadow: var(--glow); transform: translateY(-1px); }
-  .emp-card.needs-help { border-color: rgba(239,68,68,0.4); }
-  .emp-card.needs-help::before { content: ''; position: absolute; top: -1px; left: -1px; right: -1px; bottom: -1px; border-radius: var(--radius); border: 1px solid rgba(239,68,68,0.4); animation: pulse-help 2s infinite; pointer-events: none; }
-  @keyframes pulse-help { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
-  .ecard-top { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
-  .ecard-avatar { width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 800; flex-shrink: 0; }
+  /* ── EMPLOYEE CARDS (Dashboard) ── */
+  .emp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+  .emp-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.2rem; box-shadow: var(--shadow-sm); transition: all 0.2s; cursor: pointer; }
+  .emp-card:hover { box-shadow: var(--shadow); border-color: var(--border-hover); transform: translateY(-2px); }
+  .ecard-top { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .ecard-avatar { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 700; flex-shrink: 0; border: 2px solid var(--border); }
   .ecard-info { flex: 1; min-width: 0; }
-  .ecard-name { font-weight: 700; font-size: 0.92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .ecard-role { font-size: 0.68rem; color: var(--muted); font-family: 'DM Mono', monospace; }
-  .ecard-dept { font-size: 0.62rem; color: var(--muted2); font-family: 'DM Mono', monospace; margin-top: 1px; }
-  .badge {
-    padding: 3px 10px; border-radius: 20px; font-size: 0.62rem; font-weight: 600;
-    letter-spacing: 0.04em; font-family: 'DM Mono', monospace; text-transform: uppercase; flex-shrink: 0;
-  }
-  .b-online  { background: rgba(34,197,94,0.12); color: var(--green); border: 1px solid rgba(34,197,94,0.25); }
-  .b-offline { background: rgba(122,118,128,0.12); color: var(--muted); border: 1px solid rgba(122,118,128,0.15); }
-  .b-help    { background: rgba(239,68,68,0.12); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
-  .b-remote  { background: rgba(25,205,235,0.1); color: var(--cyan); border: 1px solid rgba(25,205,235,0.2); }
-  .ecard-times { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-  .tbox { background: var(--darker); border-radius: var(--radius-xs); padding: 8px 10px; text-align: center; }
-  .tbox-label { font-size: 0.58rem; color: var(--muted2); font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 2px; }
-  .tbox-val { font-family: 'DM Mono', monospace; font-size: 0.82rem; font-weight: 500; color: var(--text); }
+  .ecard-name { font-weight: 700; font-size: 0.9rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ecard-role { font-size: 0.68rem; color: var(--muted); }
+  .ecard-dept { font-size: 0.62rem; color: var(--muted2); }
+  .ecard-schedule { font-size: 0.66rem; color: var(--primary); font-weight: 500; display: flex; align-items: center; gap: 4px; margin-top: 3px; }
+  .ecard-schedule .sched-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .sched-dot.online { background: var(--green); box-shadow: 0 0 6px rgba(16,185,129,0.4); }
+  .sched-dot.offline { background: var(--muted2); }
+  .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.64rem; font-weight: 600; flex-shrink: 0; }
+  .b-online { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+  .b-offline { background: var(--surface3); color: var(--muted); border: 1px solid var(--border); }
+  .ecard-times { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 12px; }
+  .tbox { background: var(--surface3); border-radius: var(--radius-xs); padding: 8px; text-align: center; }
+  .tbox-label { font-size: 0.58rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px; }
+  .tbox-val { font-family: 'DM Mono', monospace; font-size: 0.82rem; font-weight: 600; color: var(--text); }
   .tbox-val.worked { color: var(--green); }
-  .ecard-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+  .ecard-actions { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  .ecard-actions .btn { flex: 1; justify-content: center; }
 
-  /* ── EMPLOYEE PROFILE PANEL ── */
-  .profile-panel {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius); overflow: hidden;
-  }
-  .profile-header {
-    padding: 2rem; display: flex; gap: 20px; align-items: center;
-    background: linear-gradient(135deg, rgba(25,205,235,0.04) 0%, rgba(0,101,243,0.04) 100%);
-    border-bottom: 1px solid var(--border);
-  }
-  .profile-avatar { width: 72px; height: 72px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; font-weight: 800; flex-shrink: 0; }
+  /* ── PROFILE ── */
+  .profile-panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+  .profile-header { padding: 2rem; display: flex; gap: 20px; align-items: center; background: linear-gradient(135deg, #f0f9ff 0%, #ecfeff 100%); border-bottom: 1px solid var(--border); }
+  .profile-avatar { width: 72px; height: 72px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800; flex-shrink: 0; border: 3px solid var(--surface); box-shadow: var(--shadow); }
   .profile-main { flex: 1; }
-  .profile-name { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.02em; }
-  .profile-role { font-size: 0.8rem; color: var(--muted); font-family: 'DM Mono', monospace; margin-top: 2px; }
-  .profile-meta { display: flex; gap: 16px; margin-top: 8px; flex-wrap: wrap; }
-  .profile-tag { font-size: 0.7rem; font-family: 'DM Mono', monospace; color: var(--muted2); display: flex; align-items: center; gap: 4px; }
+  .profile-name { font-size: 1.3rem; font-weight: 800; color: var(--text); }
+  .profile-role { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+  .profile-meta { display: flex; gap: 14px; margin-top: 8px; flex-wrap: wrap; }
+  .profile-tag { font-size: 0.68rem; color: var(--muted); display: flex; align-items: center; gap: 4px; }
   .profile-body { padding: 1.5rem 2rem; }
-  .profile-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 12px; margin-bottom: 1.5rem; }
-  .pstat { background: var(--darker); border-radius: var(--radius-xs); padding: 12px; text-align: center; }
-  .pstat-val { font-size: 1.3rem; font-weight: 800; }
-  .pstat-label { font-size: 0.6rem; color: var(--muted); font-family: 'DM Mono', monospace; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 4px; }
-  .profile-section-title { font-size: 0.68rem; font-family: 'DM Mono', monospace; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; margin-top: 1.2rem; }
-  .checkin-timeline { display: flex; flex-direction: column; gap: 6px; }
-  .ci-row { display: flex; align-items: center; gap: 12px; padding: 8px 12px; background: var(--darker); border-radius: var(--radius-xs); font-size: 0.8rem; }
+  .profile-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
+  .pstat { background: var(--surface3); border-radius: var(--radius-xs); padding: 12px; text-align: center; }
+  .pstat-val { font-size: 1.2rem; font-weight: 800; }
+  .pstat-label { font-size: 0.58rem; color: var(--muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 4px; }
+  .profile-section-title { font-size: 0.68rem; color: var(--muted); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; margin-top: 1.5rem; }
+  .checkin-timeline { display: flex; flex-direction: column; gap: 5px; }
+  .ci-row { display: flex; align-items: center; gap: 12px; padding: 8px 12px; background: var(--surface3); border-radius: var(--radius-xs); font-size: 0.8rem; }
   .ci-date { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); min-width: 80px; }
-  .ci-time { font-family: 'DM Mono', monospace; font-size: 0.78rem; color: var(--text); }
+  .ci-time { font-family: 'DM Mono', monospace; font-size: 0.78rem; color: var(--text); font-weight: 500; }
   .ci-arrow { color: var(--muted2); }
-  .ci-hours { margin-left: auto; font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--green); }
+  .ci-hours { margin-left: auto; font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--green); font-weight: 600; }
 
   /* ── MODAL ── */
-  .modal-overlay {
-    display: none; position: fixed; inset: 0;
-    background: rgba(0,0,0,0.65); z-index: 200;
-    align-items: center; justify-content: center;
-    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-  }
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 200; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
   .modal-overlay.open { display: flex; }
-  .modal {
-    background: var(--surface2); border: 1px solid var(--border);
-    border-radius: 20px; padding: 2rem; width: 92%;
-    max-width: 540px; max-height: 90vh; overflow-y: auto;
-    animation: modalIn 0.2s ease; box-shadow: 0 24px 80px rgba(0,0,0,0.5);
-  }
-  @keyframes modalIn { from { opacity: 0; transform: scale(0.96) translateY(8px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-  .modal-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 8px; }
+  .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; width: 92%; max-width: 540px; max-height: 90vh; overflow-y: auto; animation: modalIn 0.2s ease; box-shadow: var(--shadow-lg); }
+  @keyframes modalIn { from { opacity: 0; transform: scale(0.97) translateY(6px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+  .modal-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 8px; color: var(--text); }
   .modal-title .icon { font-size: 1.1rem; }
   .form-group { margin-bottom: 1rem; }
-  .form-label { font-size: 0.7rem; color: var(--muted); font-family: 'DM Mono', monospace; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; display: block; }
-  .form-input, .form-select, .form-textarea {
-    width: 100%; background: var(--darker); border: 1px solid var(--border);
-    color: var(--text); font-family: 'Syne', sans-serif; font-size: 0.86rem;
-    padding: 10px 14px; border-radius: var(--radius-xs); outline: none;
-    transition: border-color 0.2s;
-  }
-  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--cyan); }
-  .form-select option { background: var(--surface2); }
+  .form-label { font-size: 0.68rem; color: var(--muted); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 6px; display: block; }
+  .form-input, .form-select, .form-textarea { width: 100%; background: var(--surface3); border: 1px solid var(--border); color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.86rem; padding: 10px 14px; border-radius: var(--radius-xs); outline: none; transition: border-color 0.2s; }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,151,204,0.1); }
+  .form-select option { background: var(--surface); }
   .form-textarea { resize: vertical; min-height: 80px; }
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 1.5rem; }
 
   /* ── TABLES ── */
-  .table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
-  table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
-  th { text-align: left; padding: 11px 16px; font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); background: var(--surface); }
-  td { padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.03); }
-  tr:hover td { background: rgba(255,255,255,0.015); }
+  .table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-sm); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  th { text-align: left; padding: 11px 16px; font-size: 0.64rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); background: var(--surface2); }
+  td { padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.04); }
+  tr:hover td { background: rgba(0,151,204,0.02); }
   tr:last-child td { border-bottom: none; }
 
-  /* ── ALERTS ── */
-  .alert-bar { display: flex; gap: 10px; align-items: center; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); border-radius: var(--radius-sm); padding: 12px 16px; margin-bottom: 12px; font-size: 0.82rem; }
-  .alert-icon { font-size: 1rem; }
+  /* ── INLINE TABLE INPUTS ── */
+  .ci-inline { background: var(--surface3); border: 1px solid var(--border); color: var(--text); font-family: 'DM Mono', monospace; font-size: 0.78rem; padding: 6px 8px; border-radius: 6px; outline: none; transition: border-color 0.2s; width: 100%; max-width: 120px; text-align: center; }
+  .ci-inline:focus { border-color: var(--primary); background: var(--cyan-bg); box-shadow: 0 0 0 2px rgba(0,151,204,0.1); }
+  .ci-inline-date { max-width: 140px; }
+  .ci-inline-wrap { display: flex; align-items: center; gap: 4px; }
+  .ci-save-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--primary); opacity: 0; transition: opacity 0.3s; flex-shrink: 0; }
+  .ci-save-dot.visible { opacity: 1; }
+  .ci-schedule-hint { font-size: 0.62rem; color: var(--muted2); margin-top: 2px; }
 
   /* ── ASISTENCIA CARDS ── */
   .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
-  .toolbar-left { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-  .week-nav { display: flex; align-items: center; gap: 8px; }
-  .week-label { font-family: 'DM Mono', monospace; font-size: 0.8rem; color: var(--text); min-width: 160px; text-align: center; }
-
-  .att-emp-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius); margin-bottom: 14px; overflow: hidden;
-    transition: border-color 0.2s;
-  }
-  .att-emp-card:hover { border-color: var(--border-hover); }
-  .att-emp-header {
-    display: flex; align-items: center; gap: 14px; padding: 14px 18px;
-    border-bottom: 1px solid var(--border); cursor: pointer;
-  }
-  .att-emp-header:hover { background: rgba(255,255,255,0.015); }
-  .att-emp-name { font-weight: 700; font-size: 0.88rem; }
-  .att-emp-schedule { font-family: 'DM Mono', monospace; font-size: 0.66rem; color: var(--muted2); margin-top: 1px; }
-  .att-emp-summary {
-    margin-left: auto; display: flex; gap: 12px; align-items: center;
-    font-family: 'DM Mono', monospace; font-size: 0.68rem;
-  }
-  .att-emp-summary span { display: flex; align-items: center; gap: 3px; }
+  .toolbar-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .week-nav { display: flex; align-items: center; gap: 6px; }
+  .week-label { font-family: 'DM Mono', monospace; font-size: 0.8rem; color: var(--text); min-width: 160px; text-align: center; font-weight: 500; }
+  .att-emp-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 14px; overflow: hidden; box-shadow: var(--shadow-sm); transition: all 0.2s; }
+  .att-emp-card:hover { box-shadow: var(--shadow); border-color: var(--border-hover); }
+  .att-emp-header { display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-bottom: 1px solid var(--border); cursor: pointer; }
+  .att-emp-header:hover { background: var(--surface2); }
+  .att-emp-name { font-weight: 700; font-size: 0.88rem; color: var(--text); }
+  .att-emp-schedule { font-size: 0.66rem; color: var(--muted); margin-top: 1px; }
+  .att-emp-summary { margin-left: auto; display: flex; gap: 12px; align-items: center; font-family: 'DM Mono', monospace; font-size: 0.68rem; }
   .att-days-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; }
-  .att-day-col {
-    padding: 12px 10px; border-right: 1px solid var(--border);
-    display: flex; flex-direction: column; align-items: center; gap: 8px;
-    min-height: 100px;
-  }
+  .att-day-col { padding: 12px 10px; border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; gap: 8px; min-height: 100px; }
   .att-day-col:last-child { border-right: none; }
-  .att-day-col.is-today { background: rgba(25,205,235,0.03); }
-  .att-day-label {
-    font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--muted);
-    letter-spacing: 0.08em; text-transform: uppercase; text-align: center;
-    margin-bottom: 2px;
-  }
-  .att-day-label .att-day-num { font-size: 0.8rem; font-weight: 700; color: var(--text); display: block; margin-top: 1px; }
-  .att-day-col.is-today .att-day-num { color: var(--cyan); }
+  .att-day-col.is-today { background: var(--cyan-bg); }
+  .att-day-label { font-size: 0.6rem; color: var(--muted); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; text-align: center; }
+  .att-day-label .att-day-num { font-size: 0.82rem; font-weight: 700; color: var(--text); display: block; margin-top: 1px; }
+  .att-day-col.is-today .att-day-num { color: var(--primary); }
   .att-tag-grid { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; }
-  .att-tag {
-    padding: 4px 8px; border-radius: 6px; font-size: 0.64rem; font-weight: 600;
-    font-family: 'DM Mono', monospace; cursor: pointer;
-    border: 1px solid var(--border); background: transparent; color: var(--muted);
-    transition: all 0.15s; display: flex; align-items: center; gap: 3px;
-    user-select: none; white-space: nowrap;
-  }
-  .att-tag:hover { border-color: var(--cyan); background: rgba(25,205,235,0.04); }
-  .att-tag.t-connected  { background: rgba(34,197,94,0.12);  border-color: rgba(34,197,94,0.35);  color: var(--green); }
-  .att-tag.t-meeting    { background: rgba(25,205,235,0.12); border-color: rgba(25,205,235,0.35); color: var(--cyan); }
-  .att-tag.t-absent     { background: rgba(239,68,68,0.12);  border-color: rgba(239,68,68,0.35);  color: var(--red); }
-  .att-tag.t-late       { background: rgba(245,158,11,0.12); border-color: rgba(245,158,11,0.35); color: var(--yellow); }
-  .att-tag.t-permission { background: rgba(168,85,247,0.12); border-color: rgba(168,85,247,0.35); color: var(--purple); }
-  .att-tag.t-vacation   { background: rgba(249,115,22,0.12); border-color: rgba(249,115,22,0.35); color: var(--orange); }
-  .att-day-note {
-    font-size: 0.6rem; color: var(--muted2); font-family: 'DM Mono', monospace;
-    max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-    cursor: pointer; margin-top: auto; text-align: center;
-  }
-  .att-day-note:hover { color: var(--cyan); }
-
-  /* ── INLINE TABLE INPUTS ── */
-  .ci-inline {
-    background: var(--darker); border: 1px solid var(--border); color: var(--text);
-    font-family: 'DM Mono', monospace; font-size: 0.78rem; padding: 5px 8px;
-    border-radius: 6px; outline: none; transition: border-color 0.2s;
-    width: 100%; max-width: 120px; text-align: center;
-  }
-  .ci-inline:focus { border-color: var(--cyan); background: rgba(25,205,235,0.04); }
-  .ci-inline::-webkit-calendar-picker-indicator { filter: invert(0.6); cursor: pointer; }
-  .ci-inline-date { max-width: 140px; }
-  .ci-inline-wrap { display: flex; align-items: center; gap: 4px; }
-  .ci-save-dot {
-    width: 6px; height: 6px; border-radius: 50%; background: var(--cyan);
-    opacity: 0; transition: opacity 0.3s; flex-shrink: 0;
-  }
-  .ci-save-dot.visible { opacity: 1; }
-  .ci-schedule-hint {
-    font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--muted2);
-    margin-top: 2px;
-  }
+  .att-tag { padding: 4px 7px; border-radius: 6px; font-size: 0.62rem; font-weight: 600; cursor: pointer; border: 1px solid var(--border); background: var(--surface); color: var(--muted); transition: all 0.15s; display: flex; align-items: center; gap: 3px; user-select: none; white-space: nowrap; }
+  .att-tag:hover { border-color: var(--primary); }
+  .att-tag.t-connected  { background: var(--green-bg);  border-color: var(--green-border);  color: var(--green); }
+  .att-tag.t-meeting    { background: var(--cyan-bg);   border-color: var(--cyan-border);   color: var(--primary); }
+  .att-tag.t-absent     { background: var(--red-bg);    border-color: var(--red-border);    color: var(--red); }
+  .att-tag.t-late       { background: var(--yellow-bg); border-color: var(--yellow-border); color: var(--yellow); }
+  .att-tag.t-permission { background: var(--purple-bg); border-color: var(--purple-border); color: var(--purple); }
+  .att-tag.t-vacation   { background: var(--orange-bg); border-color: var(--orange-border); color: var(--orange); }
+  .att-day-note { font-size: 0.6rem; color: var(--muted2); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; margin-top: auto; text-align: center; }
+  .att-day-note:hover { color: var(--primary); }
 
   /* ── EVENTS ── */
-  .event-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.2rem; margin-bottom: 8px; display: flex; align-items: center; gap: 14px; transition: border-color 0.2s; }
-  .event-card:hover { border-color: var(--border-hover); }
+  .event-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.2rem; margin-bottom: 8px; display: flex; align-items: center; gap: 14px; box-shadow: var(--shadow-sm); transition: all 0.2s; }
+  .event-card:hover { box-shadow: var(--shadow); border-color: var(--border-hover); }
   .event-icon { font-size: 1.3rem; flex-shrink: 0; }
   .event-info { flex: 1; min-width: 0; }
-  .event-emp { font-weight: 700; font-size: 0.86rem; }
+  .event-emp { font-weight: 700; font-size: 0.86rem; color: var(--text); }
   .event-desc { font-size: 0.74rem; color: var(--muted); margin-top: 2px; }
-  .event-dates { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--cyan); margin-top: 4px; }
-  .event-type-badge { padding: 3px 10px; border-radius: 20px; font-size: 0.62rem; font-weight: 600; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.04em; flex-shrink: 0; }
-  .type-vacation { background: rgba(34,197,94,0.12); color: var(--green); border: 1px solid rgba(34,197,94,0.25); }
-  .type-medical  { background: rgba(239,68,68,0.12); color: var(--red); border: 1px solid rgba(239,68,68,0.25); }
-  .type-personal { background: rgba(168,85,247,0.12); color: var(--purple); border: 1px solid rgba(168,85,247,0.25); }
-  .type-absence  { background: rgba(245,158,11,0.12); color: var(--yellow); border: 1px solid rgba(245,158,11,0.25); }
-  .type-other    { background: rgba(122,118,128,0.12); color: var(--muted); border: 1px solid rgba(122,118,128,0.2); }
+  .event-dates { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--primary); margin-top: 4px; }
+  .event-type-badge { padding: 4px 10px; border-radius: 20px; font-size: 0.62rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; flex-shrink: 0; }
+  .type-vacation { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+  .type-medical  { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+  .type-personal { background: var(--purple-bg); color: var(--purple); border: 1px solid var(--purple-border); }
+  .type-absence  { background: var(--yellow-bg); color: var(--yellow); border: 1px solid var(--yellow-border); }
+  .type-other    { background: var(--surface3); color: var(--muted); border: 1px solid var(--border); }
 
   /* ── HOURS ── */
-  .repay-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .repay-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm); }
   .repay-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
-  .repay-table th { text-align: left; padding: 10px 16px; font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); }
-  .repay-table td { padding: 11px 16px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+  .repay-table th { text-align: left; padding: 10px 16px; font-size: 0.62rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); background: var(--surface2); }
+  .repay-table td { padding: 11px 16px; border-bottom: 1px solid rgba(0,0,0,0.04); }
   .repay-table tr:last-child td { border-bottom: none; }
-  .repay-table tr:hover td { background: rgba(255,255,255,0.015); }
+  .repay-table tr:hover td { background: rgba(0,151,204,0.02); }
   .hours-badge { padding: 3px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 600; font-family: 'DM Mono', monospace; }
-  .hours-pending { background: rgba(249,115,22,0.12); color: var(--orange); border: 1px solid rgba(249,115,22,0.25); }
-  .hours-done    { background: rgba(34,197,94,0.12);  color: var(--green);  border: 1px solid rgba(34,197,94,0.25); }
+  .hours-pending { background: var(--orange-bg); color: var(--orange); border: 1px solid var(--orange-border); }
+  .hours-done    { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
 
   /* ── LOG ── */
   .log-entry { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.82rem; }
   .log-entry:last-child { border-bottom: none; }
   .log-time { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--muted2); min-width: 72px; padding-top: 2px; }
   .log-dot { width: 7px; height: 7px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
-  .log-msg { flex: 1; }
-  .log-emp { font-weight: 700; color: var(--cyan); }
+  .log-msg { flex: 1; color: var(--text2); }
+  .log-emp { font-weight: 700; color: var(--primary); }
 
   /* ── AVATAR COLORS ── */
-  .av-0 { background: rgba(25,205,235,0.15);  color: var(--cyan); }
-  .av-1 { background: rgba(0,101,243,0.15);   color: #7aafff; }
-  .av-2 { background: rgba(245,158,11,0.15);  color: var(--yellow); }
-  .av-3 { background: rgba(34,197,94,0.15);   color: var(--green); }
-  .av-4 { background: rgba(249,115,22,0.15);  color: var(--orange); }
-  .av-5 { background: rgba(168,85,247,0.15);  color: var(--purple); }
-  .av-6 { background: rgba(236,72,153,0.15);  color: #f472b6; }
-  .av-7 { background: rgba(239,68,68,0.15);   color: var(--red); }
+  .av-0 { background: #e0f2fe; color: #0284c7; }
+  .av-1 { background: #dbeafe; color: #2563eb; }
+  .av-2 { background: #fef3c7; color: #d97706; }
+  .av-3 { background: #d1fae5; color: #059669; }
+  .av-4 { background: #ffedd5; color: #ea580c; }
+  .av-5 { background: #ede9fe; color: #7c3aed; }
+  .av-6 { background: #fce7f3; color: #db2777; }
+  .av-7 { background: #fee2e2; color: #dc2626; }
 
-  /* ── FILTER BTNS ── */
+  /* ── FILTER / EMPTY ── */
   .filter-group { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1rem; }
-  .filter-btn.active { border-color: var(--cyan); color: var(--cyan); background: rgba(25,205,235,0.06); }
-
-  /* ── EMPTY STATE ── */
+  .filter-btn.active { border-color: var(--primary); color: var(--primary); background: var(--cyan-bg); }
   .empty-state { text-align: center; padding: 3rem 1rem; color: var(--muted); font-size: 0.84rem; }
   .empty-state .big { font-size: 2.2rem; display: block; margin-bottom: 8px; }
-
-  /* ── LIGHT MODE ── */
-  @media (prefers-color-scheme: light) {
-    :root {
-      --dark: #ffffff; --darker: #f5f4f7; --surface: #ffffff; --surface2: #fafafa;
-      --surface3: #f0eff2; --border: rgba(0,0,0,0.07); --border-hover: rgba(25,205,235,0.3);
-      --text: #18161b; --muted: #6b6770; --muted2: #9b97a0;
-    }
-    header { box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
-    .sidebar { box-shadow: 1px 0 3px rgba(0,0,0,0.04); }
-    .form-input, .form-select, .form-textarea { background: #f5f4f7; color: #18161b; }
-    .form-select option { background: #ffffff; color: #18161b; }
-    .modal-overlay { background: rgba(0,0,0,0.35); }
-    .tbox, .ci-row, .pstat { background: #f5f4f7; }
-    .ci-inline { background: #f0eff2; color: #18161b; }
-    .ci-inline:focus { background: #e8f7fa; }
-    .btn-primary { color: #fff; }
-    .badge.b-offline { background: rgba(107,103,112,0.1); border-color: rgba(107,103,112,0.2); }
-    #login-screen { background: #f5f4f7; }
-    .login-card { box-shadow: 0 24px 80px rgba(0,0,0,0.08); }
-  }
 
   /* ── RESPONSIVE ── */
   @media (max-width: 800px) {
     .sidebar { display: none; }
     .mobile-nav { display: flex !important; }
     header { padding: 0 1rem; }
-    .main-content { padding: 1.2rem; }
+    .main-content { padding: 1rem; }
     .emp-grid { grid-template-columns: 1fr; }
-    .ecard-times { grid-template-columns: 1fr 1fr; }
     .profile-header { flex-direction: column; text-align: center; }
     .profile-meta { justify-content: center; }
+    .att-days-row { grid-template-columns: repeat(3, 1fr); }
   }
-  .mobile-nav {
-    display: none; overflow-x: auto; background: var(--dark);
-    border-bottom: 1px solid var(--border); padding: 0 1rem; gap: 2px;
-  }
+  .mobile-nav { display: none; overflow-x: auto; background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 1rem; gap: 2px; }
   .mobile-nav .nav-btn { white-space: nowrap; margin: 0; padding: 10px 14px; border-radius: 0; border-bottom: 2px solid transparent; }
-  .mobile-nav .nav-btn.active { border-bottom-color: var(--cyan); background: transparent; }
+  .mobile-nav .nav-btn.active { border-bottom-color: var(--primary); background: transparent; color: var(--primary); }
 </style>
 </head>
 <body>
@@ -450,7 +289,7 @@
 <div id="login-screen">
   <div class="login-card">
     <div class="login-logo"><img src="https://i.ibb.co/h0GTBhG/circulo-EDUARDO-OO.png" alt="Logo"></div>
-    <div class="login-title">Hero People</div>
+    <div class="login-title">Hero <span>People</span></div>
     <div class="login-sub">Hero Insurance USA · HR Platform</div>
     <button class="btn-google" id="btn-google-login">
       <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
@@ -468,16 +307,12 @@
     <div><h1>Hero <span>People</span></h1><div class="logo-sub">HR Management</div></div>
   </div>
   <div class="header-right">
-    <div class="date-display" id="live-date">—</div>
     <div id="live-clock">00:00:00</div>
+    <div class="date-display" id="live-date">—</div>
   </div>
 </header>
-
-<!-- Mobile nav -->
 <div class="mobile-nav" id="mobile-nav"></div>
-
 <div class="app-layout">
-<!-- Sidebar -->
 <nav class="sidebar" id="sidebar">
   <div class="nav-label">General</div>
   <button class="nav-btn active" onclick="switchTab('dashboard')"><span class="nav-icon">📊</span> Dashboard</button>
@@ -490,202 +325,93 @@
   <button class="nav-btn" onclick="switchTab('employees')"><span class="nav-icon">👥</span> Empleados<span class="nav-count" id="nav-emp-count">0</span></button>
   <button class="nav-btn" onclick="switchTab('log')"><span class="nav-icon">📜</span> Historial</button>
 </nav>
-
 <main class="main-content">
-
-<!-- ══ DASHBOARD ══ -->
 <div id="tab-dashboard" class="tab-content active">
-  <div class="page-header">
-    <div><div class="page-title">Dashboard</div><div class="page-desc">Estado del equipo en tiempo real</div></div>
-  </div>
+  <div class="page-header"><div><div class="page-title">Dashboard</div><div class="page-desc">Estado del equipo en tiempo real</div></div></div>
   <div id="help-alerts"></div>
   <div class="stats-row" id="dash-stats"></div>
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
-    <div style="font-size:0.82rem;font-weight:700">Equipo — Hoy</div>
+    <div style="font-size:0.88rem;font-weight:700;color:var(--text)">Equipo - Hoy</div>
     <div style="display:flex;gap:6px">
-      <button class="btn btn-outline btn-sm" onclick="setDashView('grid')" id="view-grid-btn">Grid</button>
-      <button class="btn btn-outline btn-sm" onclick="setDashView('list')" id="view-list-btn">Lista</button>
+      <button class="btn btn-outline btn-sm" onclick="setDashView('grid')" id="view-grid-btn">📊 Vista Grid</button>
+      <button class="btn btn-outline btn-sm" onclick="setDashView('list')" id="view-list-btn">📋 Vista Lista</button>
     </div>
   </div>
   <div id="dashboard-grid"></div>
 </div>
-
-<!-- ══ EMPLOYEE PROFILE ══ -->
-<div id="tab-profile" class="tab-content">
-  <div class="page-header">
-    <button class="btn btn-outline btn-sm" onclick="switchTab('dashboard')">← Volver</button>
-  </div>
-  <div id="profile-container"></div>
-</div>
-
-<!-- ══ CHECK-IN ══ -->
+<div id="tab-profile" class="tab-content"><div class="page-header"><button class="btn btn-outline btn-sm" onclick="switchTab('dashboard')">← Volver al Dashboard</button></div><div id="profile-container"></div></div>
 <div id="tab-checkin" class="tab-content">
-  <div class="page-header">
-    <div><div class="page-title">Check-in / Check-out</div><div class="page-desc">Registro de entradas y salidas</div></div>
-    <button class="btn btn-primary" onclick="openCheckinModal()">+ Registrar</button>
-  </div>
-  <div class="table-wrap">
-    <table><thead><tr><th>Empleado</th><th>Fecha</th><th>Entrada</th><th>Salida</th><th>Horas</th><th>Estado</th><th>Acciones</th></tr></thead>
-    <tbody id="checkin-table"></tbody></table>
-  </div>
+  <div class="page-header"><div><div class="page-title">Check-in / Check-out</div><div class="page-desc">Registro de entradas y salidas</div></div><button class="btn btn-primary" onclick="openCheckinModal()">+ Registrar</button></div>
+  <div class="table-wrap"><table><thead><tr><th>Empleado</th><th>Fecha</th><th>Entrada</th><th>Salida</th><th>Horas</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="checkin-table"></tbody></table></div>
 </div>
-
-<!-- ══ ASISTENCIA ══ -->
 <div id="tab-asistencia" class="tab-content">
-  <div class="page-header">
-    <div><div class="page-title">Asistencia Semanal</div><div class="page-desc">Control de conexión y asistencia por empleado</div></div>
-    <button class="btn btn-primary btn-sm" onclick="openNoteModal()">✏️ Agregar nota</button>
-  </div>
-  <div class="toolbar">
-    <div class="toolbar-left">
-      <div class="week-nav">
-        <button class="btn btn-outline btn-sm btn-icon" onclick="prevWeek()">←</button>
-        <div class="week-label" id="week-label">—</div>
-        <button class="btn btn-outline btn-sm btn-icon" onclick="nextWeek()">→</button>
-      </div>
-      <button class="btn btn-outline btn-sm" onclick="goToday()">Hoy</button>
-    </div>
-  </div>
+  <div class="page-header"><div><div class="page-title">Asistencia Semanal</div><div class="page-desc">Control de conexión y asistencia por empleado</div></div><button class="btn btn-primary btn-sm" onclick="openNoteModal()">✏️ Agregar nota</button></div>
+  <div class="toolbar"><div class="toolbar-left"><div class="week-nav"><button class="btn btn-outline btn-sm btn-icon" onclick="prevWeek()">←</button><div class="week-label" id="week-label">—</div><button class="btn btn-outline btn-sm btn-icon" onclick="nextWeek()">→</button></div><button class="btn btn-outline btn-sm" onclick="goToday()">Hoy</button></div></div>
   <div class="stats-row" id="weekly-stats"></div>
   <div id="att-cards-container"></div>
 </div>
-
-<!-- ══ PERMISOS ══ -->
 <div id="tab-eventos" class="tab-content">
-  <div class="page-header">
-    <div><div class="page-title">Permisos y Ausencias</div><div class="page-desc">Gestión de vacaciones, permisos y ausencias</div></div>
-    <button class="btn btn-primary btn-sm" onclick="openEventModal()">+ Nuevo</button>
-  </div>
-  <div class="filter-group">
-    <button class="btn btn-outline btn-sm filter-btn active" onclick="filterEvents('all',this)">Todos</button>
-    <button class="btn btn-outline btn-sm filter-btn" onclick="filterEvents('vacation',this)">🏖️ Vacaciones</button>
-    <button class="btn btn-outline btn-sm filter-btn" onclick="filterEvents('medical',this)">🏥 Médico</button>
-    <button class="btn btn-outline btn-sm filter-btn" onclick="filterEvents('personal',this)">🟣 Personal</button>
-    <button class="btn btn-outline btn-sm filter-btn" onclick="filterEvents('absence',this)">❌ Ausencia</button>
-  </div>
+  <div class="page-header"><div><div class="page-title">Permisos y Ausencias</div><div class="page-desc">Gestión de vacaciones, permisos y ausencias</div></div><button class="btn btn-primary btn-sm" onclick="openEventModal()">+ Nuevo</button></div>
+  <div class="filter-group"><button class="btn btn-outline btn-sm filter-btn active" onclick="filterEvents('all',this)">Todos</button><button class="btn btn-outline btn-sm filter-btn" onclick="filterEvents('vacation',this)">🏖️ Vacaciones</button><button class="btn btn-outline btn-sm filter-btn" onclick="filterEvents('medical',this)">🏥 Médico</button><button class="btn btn-outline btn-sm filter-btn" onclick="filterEvents('personal',this)">🟣 Personal</button><button class="btn btn-outline btn-sm filter-btn" onclick="filterEvents('absence',this)">❌ Ausencia</button></div>
   <div id="events-list"></div>
 </div>
-
-<!-- ══ HORAS ══ -->
 <div id="tab-horas" class="tab-content">
-  <div class="page-header">
-    <div><div class="page-title">Horas por Reponer</div><div class="page-desc">Control de horas pendientes y repuestas</div></div>
-    <button class="btn btn-primary btn-sm" onclick="openHoursModal()">+ Registrar</button>
-  </div>
-  <div class="repay-card">
-    <table class="repay-table">
-      <thead><tr><th>Empleado</th><th>Horas</th><th>Motivo</th><th>Fecha acordada</th><th>Estado</th><th></th></tr></thead>
-      <tbody id="hours-table"></tbody>
-    </table>
-  </div>
+  <div class="page-header"><div><div class="page-title">Horas por Reponer</div><div class="page-desc">Control de horas pendientes y repuestas</div></div><button class="btn btn-primary btn-sm" onclick="openHoursModal()">+ Registrar</button></div>
+  <div class="repay-card"><table class="repay-table"><thead><tr><th>Empleado</th><th>Horas</th><th>Motivo</th><th>Fecha acordada</th><th>Estado</th><th></th></tr></thead><tbody id="hours-table"></tbody></table></div>
 </div>
-
-<!-- ══ EMPLOYEES ══ -->
 <div id="tab-employees" class="tab-content">
-  <div class="page-header">
-    <div><div class="page-title">Directorio de Empleados</div><div class="page-desc">Gestión de personal</div></div>
-    <button class="btn btn-primary" onclick="openEmpModal()">+ Agregar Empleado</button>
-  </div>
-  <div class="table-wrap">
-    <table><thead><tr><th>Nombre</th><th>Cargo</th><th>Departamento</th><th>Horario</th><th>Email</th><th>Teléfono</th><th>Acciones</th></tr></thead>
-    <tbody id="emp-table"></tbody></table>
-  </div>
+  <div class="page-header"><div><div class="page-title">Directorio de Empleados</div><div class="page-desc">Gestión de personal</div></div><button class="btn btn-primary" onclick="openEmpModal()">+ Agregar Empleado</button></div>
+  <div class="table-wrap"><table><thead><tr><th>Nombre</th><th>Cargo</th><th>Departamento</th><th>Horario</th><th>Email</th><th>Teléfono</th><th>Acciones</th></tr></thead><tbody id="emp-table"></tbody></table></div>
 </div>
-
-<!-- ══ LOG ══ -->
 <div id="tab-log" class="tab-content">
-  <div class="page-header">
-    <div><div class="page-title">Historial de Actividad</div><div class="page-desc">Registro de todas las acciones</div></div>
-    <button class="btn btn-outline btn-sm" onclick="clearAllLog()">Limpiar historial</button>
-  </div>
-  <div id="log-container" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.4rem"></div>
+  <div class="page-header"><div><div class="page-title">Historial de Actividad</div><div class="page-desc">Registro de todas las acciones</div></div><button class="btn btn-outline btn-sm" onclick="clearAllLog()">Limpiar historial</button></div>
+  <div id="log-container" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.4rem;box-shadow:var(--shadow-sm)"></div>
 </div>
-
-</main>
-</div><!-- app-layout -->
+</main></div>
 
 <!-- ══════ MODALS ══════ -->
-
-<!-- Check-in -->
-<div class="modal-overlay" id="modal-checkin">
-  <div class="modal">
-    <div class="modal-title"><span class="icon">⏱️</span> Registrar Entrada / Salida</div>
-    <div class="form-group"><label class="form-label">Empleado</label><select class="form-select" id="ci-emp"></select></div>
-    <div class="form-group"><label class="form-label">Tipo</label><select class="form-select" id="ci-type"><option value="in">Entrada</option><option value="out">Salida</option></select></div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Fecha</label><input type="date" class="form-input" id="ci-date"></div>
-      <div class="form-group"><label class="form-label">Hora (vacío = ahora)</label><input type="time" class="form-input" id="ci-time"></div>
-    </div>
-    <div class="form-group"><label class="form-label">Nota (opcional)</label><input class="form-input" id="ci-note" placeholder="Llegó tarde por tráfico, etc."></div>
-    <div class="modal-actions"><button class="btn btn-outline" onclick="closeModal('modal-checkin')">Cancelar</button><button class="btn btn-primary" onclick="saveCheckin()">Guardar</button></div>
-  </div>
-</div>
-
-<!-- Employee -->
-<div class="modal-overlay" id="modal-emp">
-  <div class="modal">
-    <div class="modal-title"><span class="icon">👤</span> <span id="emp-modal-title">Nuevo Empleado</span></div>
-    <input type="hidden" id="emp-edit-id">
-    <div class="form-group"><label class="form-label">Nombre completo</label><input class="form-input" id="emp-name" placeholder="María González"></div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Cargo</label><input class="form-input" id="emp-role" placeholder="Agent Support Specialist"></div>
-      <div class="form-group"><label class="form-label">Departamento</label><select class="form-select" id="emp-dept"><option>Operations</option><option>Sales</option><option>Customer Service</option><option>Finance</option><option>IT</option><option>HR</option><option>Marketing</option><option>Compliance</option></select></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="emp-email" placeholder="nombre@heroinsuranceusa.com" type="email"></div>
-      <div class="form-group"><label class="form-label">Teléfono</label><input class="form-input" id="emp-phone" placeholder="(305) 555-0123" type="tel"></div>
-    </div>
-    <div class="form-group"><label class="form-label">Fecha de inicio</label><input type="date" class="form-input" id="emp-start-date"></div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Hora de entrada</label><input type="time" class="form-input" id="emp-schedule-in" value="09:00"></div>
-      <div class="form-group"><label class="form-label">Hora de salida</label><input type="time" class="form-input" id="emp-schedule-out" value="17:00"></div>
-    </div>
-    <div class="modal-actions"><button class="btn btn-outline" onclick="closeModal('modal-emp')">Cancelar</button><button class="btn btn-primary" onclick="saveEmployee()">Guardar</button></div>
-  </div>
-</div>
-
-<!-- Nota de asistencia -->
-<div class="modal-overlay" id="modal-note">
-  <div class="modal">
-    <div class="modal-title">✏️ Agregar Nota de Asistencia</div>
-    <div class="form-group"><label class="form-label">Empleado</label><select class="form-select" id="note-emp-select"></select></div>
-    <div class="form-group"><label class="form-label">Fecha</label><input type="date" class="form-input" id="note-date-input"></div>
-    <div class="form-group"><label class="form-label">Nota</label><textarea class="form-textarea" id="note-text" placeholder="Observación, comentario..."></textarea></div>
-    <div class="modal-actions"><button class="btn btn-outline" onclick="closeModal('modal-note')">Cancelar</button><button class="btn btn-primary" onclick="saveNote()">Guardar</button></div>
-  </div>
-</div>
-
-<!-- Evento -->
-<div class="modal-overlay" id="modal-event">
-  <div class="modal">
-    <div class="modal-title">📋 <span id="event-modal-title">Nuevo Evento</span></div>
-    <input type="hidden" id="event-edit-id">
-    <div class="form-group"><label class="form-label">Empleado</label><select class="form-select" id="event-emp"></select></div>
-    <div class="form-group"><label class="form-label">Tipo</label><select class="form-select" id="event-type"><option value="vacation">🏖️ Vacaciones</option><option value="medical">🏥 Permiso Médico</option><option value="personal">🟣 Permiso Personal</option><option value="absence">❌ Ausencia Justificada</option><option value="other">📌 Otro</option></select></div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Fecha inicio</label><input type="date" class="form-input" id="event-start"></div>
-      <div class="form-group"><label class="form-label">Fecha fin</label><input type="date" class="form-input" id="event-end"></div>
-    </div>
-    <div class="form-group"><label class="form-label">Descripción</label><textarea class="form-textarea" id="event-desc" placeholder="Detalles..."></textarea></div>
-    <div class="modal-actions"><button class="btn btn-outline" onclick="closeModal('modal-event')">Cancelar</button><button class="btn btn-primary" onclick="saveEvent()">Guardar</button></div>
-  </div>
-</div>
-
-<!-- Horas -->
-<div class="modal-overlay" id="modal-hours">
-  <div class="modal">
-    <div class="modal-title">⏱️ Registrar Horas por Reponer</div>
-    <input type="hidden" id="hours-edit-id">
-    <div class="form-group"><label class="form-label">Empleado</label><select class="form-select" id="hours-emp"></select></div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Horas a reponer</label><input type="number" class="form-input" id="hours-amount" min="0.5" step="0.5" placeholder="2"></div>
-      <div class="form-group"><label class="form-label">Fecha acordada</label><input type="date" class="form-input" id="hours-date"></div>
-    </div>
-    <div class="form-group"><label class="form-label">Motivo</label><input type="text" class="form-input" id="hours-reason" placeholder="Llegada tarde, permiso, etc."></div>
-    <div class="modal-actions"><button class="btn btn-outline" onclick="closeModal('modal-hours')">Cancelar</button><button class="btn btn-primary" onclick="saveHours()">Guardar</button></div>
-  </div>
-</div>
-
+<div class="modal-overlay" id="modal-checkin"><div class="modal">
+  <div class="modal-title"><span class="icon">⏱️</span> Registrar Entrada / Salida</div>
+  <div class="form-group"><label class="form-label">Empleado</label><select class="form-select" id="ci-emp"></select></div>
+  <div class="form-group"><label class="form-label">Tipo</label><select class="form-select" id="ci-type"><option value="in">Entrada</option><option value="out">Salida</option></select></div>
+  <div class="form-row"><div class="form-group"><label class="form-label">Fecha</label><input type="date" class="form-input" id="ci-date"></div><div class="form-group"><label class="form-label">Hora (vacío = ahora)</label><input type="time" class="form-input" id="ci-time"></div></div>
+  <div class="form-group"><label class="form-label">Nota (opcional)</label><input class="form-input" id="ci-note" placeholder="Llegó tarde por tráfico, etc."></div>
+  <div class="modal-actions"><button class="btn btn-outline" onclick="closeModal('modal-checkin')">Cancelar</button><button class="btn btn-primary" onclick="saveCheckin()">Guardar</button></div>
+</div></div>
+<div class="modal-overlay" id="modal-emp"><div class="modal">
+  <div class="modal-title"><span class="icon">👤</span> <span id="emp-modal-title">Nuevo Empleado</span></div>
+  <input type="hidden" id="emp-edit-id">
+  <div class="form-group"><label class="form-label">Nombre completo</label><input class="form-input" id="emp-name" placeholder="María González"></div>
+  <div class="form-row"><div class="form-group"><label class="form-label">Cargo</label><input class="form-input" id="emp-role" placeholder="Agent Support Specialist"></div><div class="form-group"><label class="form-label">Departamento</label><select class="form-select" id="emp-dept"><option>Operations</option><option>Sales</option><option>Customer Service</option><option>Finance</option><option>IT</option><option>HR</option><option>Marketing</option><option>Compliance</option></select></div></div>
+  <div class="form-row"><div class="form-group"><label class="form-label">Email</label><input class="form-input" id="emp-email" placeholder="nombre@heroinsuranceusa.com" type="email"></div><div class="form-group"><label class="form-label">Teléfono</label><input class="form-input" id="emp-phone" placeholder="(305) 555-0123" type="tel"></div></div>
+  <div class="form-group"><label class="form-label">Fecha de inicio</label><input type="date" class="form-input" id="emp-start-date"></div>
+  <div class="form-row"><div class="form-group"><label class="form-label">Hora de entrada</label><input type="time" class="form-input" id="emp-schedule-in" value="09:00"></div><div class="form-group"><label class="form-label">Hora de salida</label><input type="time" class="form-input" id="emp-schedule-out" value="17:00"></div></div>
+  <div class="modal-actions"><button class="btn btn-outline" onclick="closeModal('modal-emp')">Cancelar</button><button class="btn btn-primary" onclick="saveEmployee()">Guardar</button></div>
+</div></div>
+<div class="modal-overlay" id="modal-note"><div class="modal">
+  <div class="modal-title">✏️ Agregar Nota de Asistencia</div>
+  <div class="form-group"><label class="form-label">Empleado</label><select class="form-select" id="note-emp-select"></select></div>
+  <div class="form-group"><label class="form-label">Fecha</label><input type="date" class="form-input" id="note-date-input"></div>
+  <div class="form-group"><label class="form-label">Nota</label><textarea class="form-textarea" id="note-text" placeholder="Observación, comentario..."></textarea></div>
+  <div class="modal-actions"><button class="btn btn-outline" onclick="closeModal('modal-note')">Cancelar</button><button class="btn btn-primary" onclick="saveNote()">Guardar</button></div>
+</div></div>
+<div class="modal-overlay" id="modal-event"><div class="modal">
+  <div class="modal-title">📋 <span id="event-modal-title">Nuevo Evento</span></div>
+  <input type="hidden" id="event-edit-id">
+  <div class="form-group"><label class="form-label">Empleado</label><select class="form-select" id="event-emp"></select></div>
+  <div class="form-group"><label class="form-label">Tipo</label><select class="form-select" id="event-type"><option value="vacation">🏖️ Vacaciones</option><option value="medical">🏥 Permiso Médico</option><option value="personal">🟣 Permiso Personal</option><option value="absence">❌ Ausencia Justificada</option><option value="other">📌 Otro</option></select></div>
+  <div class="form-row"><div class="form-group"><label class="form-label">Fecha inicio</label><input type="date" class="form-input" id="event-start"></div><div class="form-group"><label class="form-label">Fecha fin</label><input type="date" class="form-input" id="event-end"></div></div>
+  <div class="form-group"><label class="form-label">Descripción</label><textarea class="form-textarea" id="event-desc" placeholder="Detalles..."></textarea></div>
+  <div class="modal-actions"><button class="btn btn-outline" onclick="closeModal('modal-event')">Cancelar</button><button class="btn btn-primary" onclick="saveEvent()">Guardar</button></div>
+</div></div>
+<div class="modal-overlay" id="modal-hours"><div class="modal">
+  <div class="modal-title">⏱️ Registrar Horas por Reponer</div>
+  <input type="hidden" id="hours-edit-id">
+  <div class="form-group"><label class="form-label">Empleado</label><select class="form-select" id="hours-emp"></select></div>
+  <div class="form-row"><div class="form-group"><label class="form-label">Horas a reponer</label><input type="number" class="form-input" id="hours-amount" min="0.5" step="0.5" placeholder="2"></div><div class="form-group"><label class="form-label">Fecha acordada</label><input type="date" class="form-input" id="hours-date"></div></div>
+  <div class="form-group"><label class="form-label">Motivo</label><input type="text" class="form-input" id="hours-reason" placeholder="Llegada tarde, permiso, etc."></div>
+  <div class="modal-actions"><button class="btn btn-outline" onclick="closeModal('modal-hours')">Cancelar</button><button class="btn btn-primary" onclick="saveHours()">Guardar</button></div>
+</div></div>
 <script>
 // ═══════════════════════════════════════
 //  DATA LAYER
@@ -847,11 +573,8 @@ function setDashView(v) {
   dashView = v;
   document.getElementById('view-grid-btn').classList.toggle('active', v==='grid');
   document.getElementById('view-list-btn').classList.toggle('active', v==='list');
-  // Reuse active class styling for toggle
-  document.getElementById('view-grid-btn').style.borderColor = v==='grid' ? 'var(--cyan)' : '';
-  document.getElementById('view-grid-btn').style.color = v==='grid' ? 'var(--cyan)' : '';
-  document.getElementById('view-list-btn').style.borderColor = v==='list' ? 'var(--cyan)' : '';
-  document.getElementById('view-list-btn').style.color = v==='list' ? 'var(--cyan)' : '';
+  document.getElementById('view-grid-btn').className = 'btn btn-outline btn-sm' + (v==='grid'?' active-toggle':'');
+  document.getElementById('view-list-btn').className = 'btn btn-outline btn-sm' + (v==='list'?' active-toggle':'');
   renderDashboard();
 }
 
@@ -872,11 +595,11 @@ function renderDashboard() {
   const activePerms = attState.events.filter(ev => { const t = todayStr(); return ev.start <= t && ev.end >= t; }).length;
 
   document.getElementById('dash-stats').innerHTML = `
-    <div class="stat st-total"><div class="stat-label">Total Empleados</div><div class="stat-val" id="stat-total">${employees.length}</div></div>
-    <div class="stat st-online"><div class="stat-label">Conectados</div><div class="stat-val">${online}</div></div>
-    <div class="stat st-off"><div class="stat-label">Desconectados</div><div class="stat-val">${offline}</div></div>
-    <div class="stat st-perm"><div class="stat-label">Permisos activos</div><div class="stat-val">${activePerms}</div></div>
-    <div class="stat st-hours"><div class="stat-label">Hrs pendientes</div><div class="stat-val">${pendingHours}</div></div>`;
+    <div class="stat"><div class="stat-icon si-total">👥</div><div class="stat-body"><div class="stat-label">Total Empleados</div><div class="stat-val">${employees.length}</div></div></div>
+    <div class="stat"><div class="stat-icon si-online">🟢</div><div class="stat-body"><div class="stat-label">Conectados</div><div class="stat-val">${online}</div></div></div>
+    <div class="stat"><div class="stat-icon si-off">⚪</div><div class="stat-body"><div class="stat-label">Desconectados</div><div class="stat-val">${offline}</div></div></div>
+    <div class="stat"><div class="stat-icon si-perm">📋</div><div class="stat-body"><div class="stat-label">Permisos</div><div class="stat-val">${activePerms}</div></div></div>
+    <div class="stat"><div class="stat-icon si-hours">🕐</div><div class="stat-body"><div class="stat-label">Hrs Pendientes</div><div class="stat-val">${pendingHours}</div></div></div>`;
 
   // Nav counts
   document.getElementById('nav-emp-count').textContent = employees.length;
@@ -899,18 +622,19 @@ function renderDashboard() {
           <div class="ecard-info">
             <div class="ecard-name">${e.name}</div>
             <div class="ecard-role">${e.role}</div>
-            <div class="ecard-dept">${e.dept} · ${e.scheduleIn||'09:00'}—${e.scheduleOut||'17:00'}</div>
+            <div class="ecard-dept">${e.dept}</div>
+            <div class="ecard-schedule"><span class="sched-dot ${st}"></span> Horario: ${e.scheduleIn||'09:00'} - ${e.scheduleOut||'17:00'}</div>
           </div>
-          <span class="badge ${statusBadge(st)}">${statusLabel(st)}</span>
         </div>
+        <div style="margin-bottom:8px"><span class="badge ${statusBadge(st)}">${st==='online'?'Estado de Sesión':'Desconectado'}</span></div>
         <div class="ecard-times">
           <div class="tbox"><div class="tbox-label">Entrada</div><div class="tbox-val">${ci?.timeIn||'—'}</div></div>
           <div class="tbox"><div class="tbox-label">Salida</div><div class="tbox-val">${ci?.timeOut||'—'}</div></div>
-          <div class="tbox"><div class="tbox-label">Trabajado</div><div class="tbox-val worked">${worked?worked.display:'—'}</div></div>
+          <div class="tbox"><div class="tbox-label">Horas Trabajadas</div><div class="tbox-val worked">${worked?worked.display:'—'}</div></div>
         </div>
         <div class="ecard-actions" onclick="event.stopPropagation()">
-          ${!ci||ci.timeOut?`<button class="btn btn-outline btn-sm" onclick="quickCheckin('${e.id}','in')">↩ Entrada</button>`:`<button class="btn btn-outline btn-sm" onclick="quickCheckin('${e.id}','out')">↪ Salida</button>`}
-          <button class="btn btn-outline btn-sm" onclick="openProfile('${e.id}')">Ver perfil</button>
+          <button class="btn btn-outline btn-sm" style="flex:2" onclick="openProfile('${e.id}')">Ver Perfil Completo</button>
+          ${!ci||ci.timeOut?`<button class="btn btn-primary btn-sm" onclick="quickCheckin('${e.id}','in')">↩ Entrada</button>`:`<button class="btn btn-primary btn-sm" onclick="quickCheckin('${e.id}','out')">↪ Salida</button>`}
         </div></div>`;
     }).join('');
   } else {
@@ -1341,12 +1065,12 @@ function renderWeek() {
   employees.forEach(emp=>dates.forEach(d=>{const r=getRec(emp.id,fmtDate(d));if(r.connected)tC++;if(r.absent)tA++;if(r.meeting)tM++;if(r.late)tL++;if(r.permission)tP++;}));
   const tH=attState.hours.filter(h=>!h.done).reduce((s,h)=>s+parseFloat(h.amount||0),0);
   document.getElementById('weekly-stats').innerHTML=`
-    <div class="stat st-online"><div class="stat-label">Conexiones</div><div class="stat-val">${tC}</div></div>
-    <div class="stat st-meet"><div class="stat-label">Meetings</div><div class="stat-val">${tM}</div></div>
-    <div class="stat st-absent"><div class="stat-label">Ausencias</div><div class="stat-val">${tA}</div></div>
-    <div class="stat st-late"><div class="stat-label">Tarde</div><div class="stat-val">${tL}</div></div>
-    <div class="stat st-perm"><div class="stat-label">Permisos</div><div class="stat-val">${tP}</div></div>
-    <div class="stat st-hours"><div class="stat-label">Hrs x reponer</div><div class="stat-val">${tH}</div></div>`;
+    <div class="stat"><div class="stat-icon si-online">✅</div><div class="stat-body"><div class="stat-label">Conexiones</div><div class="stat-val">${tC}</div></div></div>
+    <div class="stat"><div class="stat-icon si-meet">🎯</div><div class="stat-body"><div class="stat-label">Meetings</div><div class="stat-val">${tM}</div></div></div>
+    <div class="stat"><div class="stat-icon si-absent">❌</div><div class="stat-body"><div class="stat-label">Ausencias</div><div class="stat-val">${tA}</div></div></div>
+    <div class="stat"><div class="stat-icon si-late">⏰</div><div class="stat-body"><div class="stat-label">Tarde</div><div class="stat-val">${tL}</div></div></div>
+    <div class="stat"><div class="stat-icon si-perm">🟣</div><div class="stat-body"><div class="stat-label">Permisos</div><div class="stat-val">${tP}</div></div></div>
+    <div class="stat"><div class="stat-icon si-hours">🕐</div><div class="stat-body"><div class="stat-label">Hrs x reponer</div><div class="stat-val">${tH}</div></div></div>`;
 }
 
 // ═══════════════════════════════════════
@@ -1570,11 +1294,11 @@ renderDashboard();
       if (!document.getElementById("user-info")) {
         const el = document.createElement("div");
         el.id = "user-info";
-        el.style.cssText = "display:flex;align-items:center;gap:8px;font-size:0.74rem;color:var(--muted);font-family:'DM Mono',monospace";
-        const photo = user.photoURL ? '<img src="' + user.photoURL + '" style="width:26px;height:26px;border-radius:50%;border:2px solid rgba(25,205,235,0.3)">' : '';
+        el.style.cssText = "display:flex;align-items:center;gap:8px;font-size:0.74rem;color:var(--muted);font-family:'Inter',sans-serif";
+        const photo = user.photoURL ? '<img src="' + user.photoURL + '" style="width:30px;height:30px;border-radius:50%;border:2px solid var(--border);box-shadow:0 1px 4px rgba(0,0,0,0.1)">' : '';
         el.innerHTML = photo
-          + '<span>' + (user.displayName || user.email) + '</span>'
-          + '<button onclick="window.fbSignOut()" style="background:rgba(239,68,68,0.08);color:#ef4444;border:1px solid rgba(239,68,68,0.2);border-radius:6px;padding:3px 10px;font-size:0.66rem;cursor:pointer;font-family:Syne,sans-serif;font-weight:600">Salir</button>';
+          + '<span style="font-weight:600;color:var(--text)">' + (user.displayName || user.email) + '</span>'
+          + '<button onclick="window.fbSignOut()" style="background:var(--surface3);color:var(--muted);border:1px solid var(--border);border-radius:6px;padding:4px 12px;font-size:0.68rem;cursor:pointer;font-family:Inter,sans-serif;font-weight:600;transition:all 0.15s">Salir</button>';
         document.querySelector(".header-right").appendChild(el);
       }
       startListeners();

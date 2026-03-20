@@ -270,39 +270,66 @@
   .alert-bar { display: flex; gap: 10px; align-items: center; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); border-radius: var(--radius-sm); padding: 12px 16px; margin-bottom: 12px; font-size: 0.82rem; }
   .alert-icon { font-size: 1rem; }
 
-  /* ── ASISTENCIA ── */
+  /* ── ASISTENCIA CARDS ── */
   .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
   .toolbar-left { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
   .week-nav { display: flex; align-items: center; gap: 8px; }
   .week-label { font-family: 'DM Mono', monospace; font-size: 0.8rem; color: var(--text); min-width: 160px; text-align: center; }
-  .legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 1rem; padding: 10px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); }
-  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 0.7rem; color: var(--muted); }
-  .att-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
-  .att-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; min-width: 750px; }
-  .att-table th { text-align: center; padding: 10px 12px; font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); background: var(--surface); }
-  .att-table th.col-name { text-align: left; min-width: 160px; }
-  .att-table td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.03); text-align: center; vertical-align: middle; }
-  .att-table td.col-name { text-align: left; font-weight: 700; font-size: 0.84rem; }
-  .att-table tr:hover td { background: rgba(255,255,255,0.015); }
-  .att-table tr:last-child td { border-bottom: none; }
-  .day-head { display: flex; flex-direction: column; align-items: center; gap: 2px; }
-  .day-name { font-size: 0.6rem; letter-spacing: 0.08em; }
-  .day-date { font-size: 0.72rem; color: var(--text); font-weight: 600; }
-  .day-today .day-date { color: var(--cyan); }
-  .cell-widget { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-  .cell-icons { display: flex; gap: 4px; align-items: center; justify-content: center; flex-wrap: wrap; }
-  .icon-btn { width: 26px; height: 26px; border-radius: 6px; border: 1px solid var(--border); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 13px; transition: all 0.15s; }
-  .icon-btn:hover { border-color: var(--cyan); background: rgba(25,205,235,0.06); }
-  .icon-btn.active-green  { background: rgba(34,197,94,0.15);  border-color: rgba(34,197,94,0.4); }
-  .icon-btn.active-cyan   { background: rgba(25,205,235,0.15); border-color: rgba(25,205,235,0.4); }
-  .icon-btn.active-red    { background: rgba(239,68,68,0.15);  border-color: rgba(239,68,68,0.4); }
-  .icon-btn.active-yellow { background: rgba(245,158,11,0.15); border-color: rgba(245,158,11,0.4); }
-  .icon-btn.active-purple { background: rgba(168,85,247,0.15); border-color: rgba(168,85,247,0.4); }
-  .icon-btn.active-orange { background: rgba(249,115,22,0.15); border-color: rgba(249,115,22,0.4); }
-  .cell-note { font-size: 0.58rem; color: var(--muted2); font-family: 'DM Mono', monospace; max-width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
-  .cell-note:hover { color: var(--cyan); }
-  .emp-cell { display: flex; align-items: center; gap: 10px; }
-  .emp-role-small { font-size: 0.64rem; color: var(--muted2); font-family: 'DM Mono', monospace; }
+
+  .att-emp-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); margin-bottom: 14px; overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .att-emp-card:hover { border-color: var(--border-hover); }
+  .att-emp-header {
+    display: flex; align-items: center; gap: 14px; padding: 14px 18px;
+    border-bottom: 1px solid var(--border); cursor: pointer;
+  }
+  .att-emp-header:hover { background: rgba(255,255,255,0.015); }
+  .att-emp-name { font-weight: 700; font-size: 0.88rem; }
+  .att-emp-schedule { font-family: 'DM Mono', monospace; font-size: 0.66rem; color: var(--muted2); margin-top: 1px; }
+  .att-emp-summary {
+    margin-left: auto; display: flex; gap: 12px; align-items: center;
+    font-family: 'DM Mono', monospace; font-size: 0.68rem;
+  }
+  .att-emp-summary span { display: flex; align-items: center; gap: 3px; }
+  .att-days-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; }
+  .att-day-col {
+    padding: 12px 10px; border-right: 1px solid var(--border);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    min-height: 100px;
+  }
+  .att-day-col:last-child { border-right: none; }
+  .att-day-col.is-today { background: rgba(25,205,235,0.03); }
+  .att-day-label {
+    font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--muted);
+    letter-spacing: 0.08em; text-transform: uppercase; text-align: center;
+    margin-bottom: 2px;
+  }
+  .att-day-label .att-day-num { font-size: 0.8rem; font-weight: 700; color: var(--text); display: block; margin-top: 1px; }
+  .att-day-col.is-today .att-day-num { color: var(--cyan); }
+  .att-tag-grid { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; }
+  .att-tag {
+    padding: 4px 8px; border-radius: 6px; font-size: 0.64rem; font-weight: 600;
+    font-family: 'DM Mono', monospace; cursor: pointer;
+    border: 1px solid var(--border); background: transparent; color: var(--muted);
+    transition: all 0.15s; display: flex; align-items: center; gap: 3px;
+    user-select: none; white-space: nowrap;
+  }
+  .att-tag:hover { border-color: var(--cyan); background: rgba(25,205,235,0.04); }
+  .att-tag.t-connected  { background: rgba(34,197,94,0.12);  border-color: rgba(34,197,94,0.35);  color: var(--green); }
+  .att-tag.t-meeting    { background: rgba(25,205,235,0.12); border-color: rgba(25,205,235,0.35); color: var(--cyan); }
+  .att-tag.t-absent     { background: rgba(239,68,68,0.12);  border-color: rgba(239,68,68,0.35);  color: var(--red); }
+  .att-tag.t-late       { background: rgba(245,158,11,0.12); border-color: rgba(245,158,11,0.35); color: var(--yellow); }
+  .att-tag.t-permission { background: rgba(168,85,247,0.12); border-color: rgba(168,85,247,0.35); color: var(--purple); }
+  .att-tag.t-vacation   { background: rgba(249,115,22,0.12); border-color: rgba(249,115,22,0.35); color: var(--orange); }
+  .att-day-note {
+    font-size: 0.6rem; color: var(--muted2); font-family: 'DM Mono', monospace;
+    max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    cursor: pointer; margin-top: auto; text-align: center;
+  }
+  .att-day-note:hover { color: var(--cyan); }
 
   /* ── EVENTS ── */
   .event-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.2rem; margin-bottom: 8px; display: flex; align-items: center; gap: 14px; transition: border-color 0.2s; }
@@ -483,7 +510,7 @@
 <!-- ══ ASISTENCIA ══ -->
 <div id="tab-asistencia" class="tab-content">
   <div class="page-header">
-    <div><div class="page-title">Asistencia Semanal</div><div class="page-desc">Control de conexión y reuniones</div></div>
+    <div><div class="page-title">Asistencia Semanal</div><div class="page-desc">Control de conexión y asistencia por empleado</div></div>
     <button class="btn btn-primary btn-sm" onclick="openNoteModal()">✏️ Agregar nota</button>
   </div>
   <div class="toolbar">
@@ -497,15 +524,7 @@
     </div>
   </div>
   <div class="stats-row" id="weekly-stats"></div>
-  <div class="legend">
-    <div class="legend-item"><span>✅</span> Conectado</div>
-    <div class="legend-item"><span>🎯</span> Meeting</div>
-    <div class="legend-item"><span>❌</span> Ausente</div>
-    <div class="legend-item"><span>⏰</span> Tarde</div>
-    <div class="legend-item"><span>🟣</span> Permiso</div>
-    <div class="legend-item"><span>🏖️</span> Vacaciones</div>
-  </div>
-  <div class="att-wrap"><table class="att-table"><thead id="att-head"></thead><tbody id="att-body"></tbody></table></div>
+  <div id="att-cards-container"></div>
 </div>
 
 <!-- ══ PERMISOS ══ -->
@@ -545,7 +564,7 @@
     <button class="btn btn-primary" onclick="openEmpModal()">+ Agregar Empleado</button>
   </div>
   <div class="table-wrap">
-    <table><thead><tr><th>Nombre</th><th>Cargo</th><th>Departamento</th><th>Email</th><th>Teléfono</th><th>Acciones</th></tr></thead>
+    <table><thead><tr><th>Nombre</th><th>Cargo</th><th>Departamento</th><th>Horario</th><th>Email</th><th>Teléfono</th><th>Acciones</th></tr></thead>
     <tbody id="emp-table"></tbody></table>
   </div>
 </div>
@@ -593,9 +612,10 @@
       <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="emp-email" placeholder="nombre@heroinsuranceusa.com" type="email"></div>
       <div class="form-group"><label class="form-label">Teléfono</label><input class="form-input" id="emp-phone" placeholder="(305) 555-0123" type="tel"></div>
     </div>
+    <div class="form-group"><label class="form-label">Fecha de inicio</label><input type="date" class="form-input" id="emp-start-date"></div>
     <div class="form-row">
-      <div class="form-group"><label class="form-label">Fecha de inicio</label><input type="date" class="form-input" id="emp-start-date"></div>
-      <div class="form-group"><label class="form-label">Horario</label><select class="form-select" id="emp-schedule"><option value="9:00-5:00">9:00 AM - 5:00 PM</option><option value="8:00-4:00">8:00 AM - 4:00 PM</option><option value="10:00-6:00">10:00 AM - 6:00 PM</option><option value="flexible">Flexible</option></select></div>
+      <div class="form-group"><label class="form-label">Hora de entrada</label><input type="time" class="form-input" id="emp-schedule-in" value="09:00"></div>
+      <div class="form-group"><label class="form-label">Hora de salida</label><input type="time" class="form-input" id="emp-schedule-out" value="17:00"></div>
     </div>
     <div class="modal-actions"><button class="btn btn-outline" onclick="closeModal('modal-emp')">Cancelar</button><button class="btn btn-primary" onclick="saveEmployee()">Guardar</button></div>
   </div>
@@ -709,10 +729,10 @@ function calcHours(timeIn, timeOut) {
 function seedDemo() {
   if (employees.length > 0) return;
   employees = [
-    { id: uid(), name: 'Andrea Martínez', role: 'Agent Support Specialist', dept: 'Operations', email: 'andrea@heroinsuranceusa.com', phone: '(305) 555-0101', startDate: '2023-03-15', schedule: '9:00-5:00' },
-    { id: uid(), name: 'Carlos Robles',   role: 'Sales Coordinator',        dept: 'Sales',      email: 'carlos@heroinsuranceusa.com', phone: '(305) 555-0102', startDate: '2022-08-01', schedule: '9:00-5:00' },
-    { id: uid(), name: 'Diana Pérez',     role: 'Customer Service Rep',     dept: 'Customer Service', email: 'diana@heroinsuranceusa.com', phone: '(305) 555-0103', startDate: '2024-01-10', schedule: '8:00-4:00' },
-    { id: uid(), name: 'Luis Herrera',    role: 'Finance Analyst',          dept: 'Finance',    email: 'luis@heroinsuranceusa.com', phone: '(305) 555-0104', startDate: '2023-11-20', schedule: '9:00-5:00' },
+    { id: uid(), name: 'Andrea Martínez', role: 'Agent Support Specialist', dept: 'Operations', email: 'andrea@heroinsuranceusa.com', phone: '(305) 555-0101', startDate: '2023-03-15', scheduleIn: '09:00', scheduleOut: '17:00' },
+    { id: uid(), name: 'Carlos Robles',   role: 'Sales Coordinator',        dept: 'Sales',      email: 'carlos@heroinsuranceusa.com', phone: '(305) 555-0102', startDate: '2022-08-01', scheduleIn: '09:00', scheduleOut: '17:00' },
+    { id: uid(), name: 'Diana Pérez',     role: 'Customer Service Rep',     dept: 'Customer Service', email: 'diana@heroinsuranceusa.com', phone: '(305) 555-0103', startDate: '2024-01-10', scheduleIn: '08:00', scheduleOut: '16:00' },
+    { id: uid(), name: 'Luis Herrera',    role: 'Finance Analyst',          dept: 'Finance',    email: 'luis@heroinsuranceusa.com', phone: '(305) 555-0104', startDate: '2023-11-20', scheduleIn: '09:00', scheduleOut: '17:00' },
   ];
   const today = todayStr();
   checkins = [
@@ -856,7 +876,7 @@ function renderDashboard() {
           <div class="ecard-info">
             <div class="ecard-name">${e.name}</div>
             <div class="ecard-role">${e.role}</div>
-            <div class="ecard-dept">${e.dept}</div>
+            <div class="ecard-dept">${e.dept} · ${e.scheduleIn||'09:00'}—${e.scheduleOut||'17:00'}</div>
           </div>
           <span class="badge ${statusBadge(st)}">${statusLabel(st)}</span>
         </div>
@@ -932,7 +952,7 @@ function openProfile(empId) {
             <span class="profile-tag">📧 ${e.email||'—'}</span>
             <span class="profile-tag">📞 ${e.phone||'—'}</span>
             <span class="profile-tag">📅 Inicio: ${e.startDate||'—'}</span>
-            <span class="profile-tag">🕐 ${e.schedule||'9:00-5:00'}</span>
+            <span class="profile-tag">🕐 ${e.scheduleIn||'09:00'} — ${e.scheduleOut||'17:00'}</span>
             <span class="profile-tag">🏠 Remoto</span>
           </div>
         </div>
@@ -1031,11 +1051,12 @@ function deleteCheckin(ciId) {
 // ═══════════════════════════════════════
 function renderEmployees() {
   const tbody = document.getElementById('emp-table');
-  if (!employees.length) { tbody.innerHTML=`<tr><td colspan="6" class="empty-state">No hay empleados.</td></tr>`; return; }
+  if (!employees.length) { tbody.innerHTML=`<tr><td colspan="7" class="empty-state">No hay empleados.</td></tr>`; return; }
   tbody.innerHTML = employees.map((e,i) => `<tr>
     <td><div style="display:flex;align-items:center;gap:10px;cursor:pointer" onclick="openProfile('${e.id}')"><div class="ecard-avatar ${avatarClass(i)}" style="width:32px;height:32px;font-size:0.78rem;border-radius:8px">${empInitials(e.name)}</div><strong>${e.name}</strong></div></td>
     <td style="color:var(--muted);font-size:0.82rem">${e.role}</td>
     <td style="font-size:0.82rem">${e.dept}</td>
+    <td style="font-family:'DM Mono',monospace;font-size:0.74rem;color:var(--cyan)">${e.scheduleIn||'09:00'} — ${e.scheduleOut||'17:00'}</td>
     <td style="font-family:'DM Mono',monospace;font-size:0.74rem;color:var(--muted)">${e.email}</td>
     <td style="font-family:'DM Mono',monospace;font-size:0.74rem;color:var(--muted)">${e.phone||'—'}</td>
     <td><button class="btn btn-outline btn-xs btn-icon" onclick="editEmployee('${e.id}')">✏️</button> <button class="btn btn-danger btn-xs btn-icon" onclick="deleteEmployee('${e.id}')">✕</button></td>
@@ -1086,7 +1107,8 @@ function openEmpModal() {
   document.getElementById('emp-modal-title').textContent = 'Nuevo Empleado';
   ['emp-edit-id','emp-name','emp-role','emp-email','emp-phone'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('emp-start-date').value = todayStr();
-  document.getElementById('emp-schedule').value = '9:00-5:00';
+  document.getElementById('emp-schedule-in').value = '09:00';
+  document.getElementById('emp-schedule-out').value = '17:00';
   openModal('modal-emp');
 }
 function editEmployee(id) {
@@ -1099,7 +1121,8 @@ function editEmployee(id) {
   document.getElementById('emp-email').value = e.email;
   document.getElementById('emp-phone').value = e.phone || '';
   document.getElementById('emp-start-date').value = e.startDate || '';
-  document.getElementById('emp-schedule').value = e.schedule || '9:00-5:00';
+  document.getElementById('emp-schedule-in').value = e.scheduleIn || '09:00';
+  document.getElementById('emp-schedule-out').value = e.scheduleOut || '17:00';
   openModal('modal-emp');
 }
 function saveEmployee() {
@@ -1110,14 +1133,15 @@ function saveEmployee() {
   const email = document.getElementById('emp-email').value.trim();
   const phone = document.getElementById('emp-phone').value.trim();
   const startDate = document.getElementById('emp-start-date').value;
-  const schedule = document.getElementById('emp-schedule').value;
+  const scheduleIn = document.getElementById('emp-schedule-in').value || '09:00';
+  const scheduleOut = document.getElementById('emp-schedule-out').value || '17:00';
   if (!name) { alert('El nombre es requerido.'); return; }
   if (editId) {
     const e = employees.find(x=>x.id===editId);
-    if (e) Object.assign(e, {name,role,dept,email,phone,startDate,schedule});
+    if (e) Object.assign(e, {name,role,dept,email,phone,startDate,scheduleIn,scheduleOut});
     addMainLog(editId, 'Perfil actualizado', 'info');
   } else {
-    const newEmp = {id:uid(),name,role,dept,email,phone,startDate,schedule};
+    const newEmp = {id:uid(),name,role,dept,email,phone,startDate,scheduleIn,scheduleOut};
     employees.push(newEmp);
     addMainLog(newEmp.id, 'Empleado agregado', 'info');
   }
@@ -1165,15 +1189,63 @@ function toggleStatus(empId,date,field) {
 function renderWeek() {
   const dates=getWeekDates(currentWeekOffset), todayS=fmtDate(new Date());
   document.getElementById('week-label').textContent=`${fmtDisplay(dates[0])} – ${fmtDisplay(dates[4])}, ${dates[0].getFullYear()}`;
-  document.getElementById('att-head').innerHTML=`<tr><th class="col-name">Empleado</th>${dates.map(d=>{const ds=fmtDate(d),isT=ds===todayS;return`<th class="col-day ${isT?'day-today':''}"><div class="day-head"><span class="day-name">${ATT_DAYS[d.getDay()-1]||''}</span><span class="day-date">${d.getDate()}</span></div></th>`;}).join('')}<th>Semana</th></tr>`;
-  document.getElementById('att-body').innerHTML=employees.map((emp,i)=>{
-    const conn=dates.filter(d=>getRec(emp.id,fmtDate(d)).connected).length;
-    const meet=dates.filter(d=>getRec(emp.id,fmtDate(d)).meeting).length;
-    const abs=dates.filter(d=>getRec(emp.id,fmtDate(d)).absent).length;
-    return`<tr><td class="col-name"><div class="emp-cell"><div class="ecard-avatar ${avatarClass(i)}" style="width:30px;height:30px;font-size:0.72rem;border-radius:7px">${empInitials(emp.name)}</div><div><div>${emp.name}</div><div class="emp-role-small">${emp.role}</div></div></div></td>
-    ${dates.map(d=>{const ds=fmtDate(d),rec=getRec(emp.id,ds),note=rec.note||'';return`<td><div class="cell-widget"><div class="cell-icons">${Object.entries(STATUS_ICONS).map(([key,s])=>`<button class="icon-btn ${rec[key]?s.cls:''}" title="${s.label}" onclick="toggleStatus('${emp.id}','${ds}','${key}')">${s.icon}</button>`).join('')}</div>${note?`<div class="cell-note" onclick="openNoteModalFor('${emp.id}','${ds}')">${note}</div>`:''}</div></td>`;}).join('')}
-    <td style="text-align:center"><div style="font-family:'DM Mono',monospace;font-size:0.68rem;line-height:1.9"><span style="color:var(--green)">✅ ${conn}/5</span><br><span style="color:var(--cyan)">🎯 ${meet}/5</span><br><span style="color:var(--red)">❌ ${abs}</span></div></td></tr>`;
+
+  const container = document.getElementById('att-cards-container');
+  if (!employees.length) {
+    container.innerHTML = '<div class="empty-state"><span class="big">📅</span>Agrega empleados para ver la asistencia.</div>';
+    document.getElementById('weekly-stats').innerHTML = '';
+    return;
+  }
+
+  const STATUS_TAGS = [
+    { key:'connected',  emoji:'✅', label:'Conectado',  cls:'t-connected' },
+    { key:'meeting',    emoji:'🎯', label:'Meeting',    cls:'t-meeting' },
+    { key:'late',       emoji:'⏰', label:'Tarde',      cls:'t-late' },
+    { key:'absent',     emoji:'❌', label:'Ausente',    cls:'t-absent' },
+    { key:'permission', emoji:'🟣', label:'Permiso',    cls:'t-permission' },
+    { key:'vacation',   emoji:'🏖️', label:'Vacaciones', cls:'t-vacation' },
+  ];
+
+  container.innerHTML = employees.map((emp, i) => {
+    const conn = dates.filter(d=>getRec(emp.id,fmtDate(d)).connected).length;
+    const meet = dates.filter(d=>getRec(emp.id,fmtDate(d)).meeting).length;
+    const abs  = dates.filter(d=>getRec(emp.id,fmtDate(d)).absent).length;
+    const schedLabel = (emp.scheduleIn||'09:00') + ' — ' + (emp.scheduleOut||'17:00');
+
+    return `<div class="att-emp-card">
+      <div class="att-emp-header" onclick="openProfile('${emp.id}')">
+        <div class="ecard-avatar ${avatarClass(i)}" style="width:36px;height:36px;font-size:0.82rem;border-radius:9px">${empInitials(emp.name)}</div>
+        <div>
+          <div class="att-emp-name">${emp.name}</div>
+          <div class="att-emp-schedule">🕐 ${schedLabel} · ${emp.dept}</div>
+        </div>
+        <div class="att-emp-summary">
+          <span style="color:var(--green)">✅ ${conn}/5</span>
+          <span style="color:var(--cyan)">🎯 ${meet}/5</span>
+          ${abs > 0 ? `<span style="color:var(--red)">❌ ${abs}</span>` : ''}
+        </div>
+      </div>
+      <div class="att-days-row">
+        ${dates.map(d => {
+          const ds = fmtDate(d);
+          const isToday = ds === todayS;
+          const rec = getRec(emp.id, ds);
+          const note = rec.note || '';
+          const dayName = ATT_DAYS[d.getDay()-1] || '';
+          return `<div class="att-day-col ${isToday?'is-today':''}">
+            <div class="att-day-label">${dayName}<span class="att-day-num">${d.getDate()}</span></div>
+            <div class="att-tag-grid">
+              ${STATUS_TAGS.map(s =>
+                `<button class="att-tag ${rec[s.key]?s.cls:''}" onclick="toggleStatus('${emp.id}','${ds}','${s.key}')" title="${s.label}">${s.emoji} ${rec[s.key]?s.label:''}</button>`
+              ).join('')}
+            </div>
+            ${note ? `<div class="att-day-note" onclick="openNoteModalFor('${emp.id}','${ds}')" title="${note}">📝 ${note}</div>` : `<div class="att-day-note" onclick="openNoteModalFor('${emp.id}','${ds}')" style="opacity:0.3">+ nota</div>`}
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
   }).join('');
+
   // Stats
   let tC=0,tA=0,tM=0,tL=0,tP=0;
   employees.forEach(emp=>dates.forEach(d=>{const r=getRec(emp.id,fmtDate(d));if(r.connected)tC++;if(r.absent)tA++;if(r.meeting)tM++;if(r.late)tL++;if(r.permission)tP++;}));

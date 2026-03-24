@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Check-in · Hero Insurance</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cyan:   #19CDEB;
+    --blue:   #0097CC;
+    --royal:  #0065F3;
+    --dark:   #111213;
+    --surface:#1a1d1f;
+    --border: rgba(255,255,255,0.08);
+    --text:   #f0eeee;
+    --muted:  #6b7280;
+    --green:  #22c55e;
+    --yellow: #f59e0b;
+    --red:    #ef4444;
+    --orange: #f97316;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--dark);
+    color: var(--text);
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    overflow-x: hidden;
+  }
+
+  /* Background glow */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -30%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(25,205,235,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* LOGO */
+  .logo-wrap {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 10px; margin-bottom: 2rem;
+    animation: fadeDown 0.5s ease both;
+  }
+  .logo-img {
+    width: 64px; height: 64px; border-radius: 50%;
+    border: 2px solid rgba(25,205,235,0.3);
+    box-shadow: 0 0 24px rgba(25,205,235,0.15);
+  }
+  .logo-title { font-size: 1rem; font-weight: 800; letter-spacing: 0.08em; color: var(--muted); text-transform: uppercase; font-family: 'DM Mono', monospace; }
+
+  /* CARD */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 2rem 1.5rem;
+    width: 100%; max-width: 380px;
+    box-shadow: 0 24px 48px rgba(0,0,0,0.4);
+    animation: fadeUp 0.5s ease 0.1s both;
+  }
+
+  /* STEP 1 — SELECT NAME */
+  #step-select { display: block; }
+  #step-action { display: none; }
+  #step-confirm { display: none; }
+
+  .step-title {
+    font-size: 1.2rem; font-weight: 800;
+    margin-bottom: 6px; letter-spacing: -0.02em;
+  }
+  .step-sub {
+    font-size: 0.75rem; color: var(--muted);
+    font-family: 'DM Mono', monospace; margin-bottom: 1.4rem;
+  }
+
+  /* Name list */
+  .name-list { display: flex; flex-direction: column; gap: 8px; }
+
+  .name-btn {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px; border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.03);
+    cursor: pointer; transition: all 0.15s;
+    text-align: left; width: 100%;
+  }
+  .name-btn:hover, .name-btn:active {
+    border-color: var(--cyan);
+    background: rgba(25,205,235,0.06);
+    transform: translateX(4px);
+  }
+  .name-avatar {
+    width: 36px; height: 36px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem; font-weight: 800; flex-shrink: 0;
+  }
+  .name-info { flex: 1; }
+  .name-label { font-size: 0.9rem; font-weight: 700; }
+  .name-role  { font-size: 0.68rem; color: var(--muted); font-family: 'DM Mono', monospace; }
+  .name-arrow { color: var(--muted); font-size: 0.9rem; }
+
+  /* Avatar colors */
+  .av-0 { background: rgba(25,205,235,0.2);  color: var(--cyan); }
+  .av-1 { background: rgba(0,101,243,0.2);   color: #7aafff; }
+  .av-2 { background: rgba(245,158,11,0.2);  color: var(--yellow); }
+  .av-3 { background: rgba(34,197,94,0.2);   color: var(--green); }
+  .av-4 { background: rgba(249,115,22,0.2);  color: var(--orange); }
+  .av-5 { background: rgba(168,85,247,0.2);  color: #c084fc; }
+  .av-6 { background: rgba(236,72,153,0.2);  color: #f472b6; }
+  .av-7 { background: rgba(239,68,68,0.2);   color: var(--red); }
+
+  /* STEP 2 — ACTION BUTTONS */
+  .selected-user {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 1.6rem;
+    padding: 10px 14px;
+    background: rgba(25,205,235,0.06);
+    border: 1px solid rgba(25,205,235,0.2);
+    border-radius: 12px;
+  }
+  .selected-avatar {
+    width: 38px; height: 38px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; font-weight: 800; flex-shrink: 0;
+  }
+  .selected-name { font-weight: 700; font-size: 0.9rem; }
+  .selected-role { font-size: 0.68rem; color: var(--muted); font-family: 'DM Mono', monospace; }
+
+  .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+
+  .action-btn {
+    padding: 1.4rem 1rem;
+    border-radius: 18px; border: 1px solid var(--border);
+    background: rgba(255,255,255,0.03);
+    cursor: pointer; transition: all 0.18s;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 8px;
+    font-family: 'Syne', sans-serif;
+  }
+  .action-btn:active { transform: scale(0.96); }
+
+  .action-btn.entrada {
+    border-color: rgba(34,197,94,0.3);
+    background: rgba(34,197,94,0.06);
+  }
+  .action-btn.entrada:hover { background: rgba(34,197,94,0.12); border-color: var(--green); }
+  .action-btn.entrada .action-icon { color: var(--green); }
+  .action-btn.entrada .action-label { color: var(--green); }
+
+  .action-btn.salida {
+    border-color: rgba(239,68,68,0.3);
+    background: rgba(239,68,68,0.06);
+  }
+  .action-btn.salida:hover { background: rgba(239,68,68,0.12); border-color: var(--red); }
+  .action-btn.salida .action-icon { color: var(--red); }
+  .action-btn.salida .action-label { color: var(--red); }
+
+  .action-btn.receso {
+    grid-column: 1 / -1;
+    border-color: rgba(245,158,11,0.3);
+    background: rgba(245,158,11,0.06);
+    flex-direction: row; justify-content: center; gap: 12px;
+    padding: 1rem;
+  }
+  .action-btn.receso:hover { background: rgba(245,158,11,0.12); border-color: var(--yellow); }
+  .action-btn.receso .action-icon { color: var(--yellow); }
+  .action-btn.receso .action-label { color: var(--yellow); }
+
+  .action-icon { font-size: 2rem; line-height: 1; }
+  .action-label { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.02em; }
+  .action-time  { font-size: 0.65rem; color: var(--muted); font-family: 'DM Mono', monospace; }
+
+  .btn-back {
+    width: 100%; padding: 10px; border-radius: 10px;
+    border: 1px solid var(--border); background: transparent;
+    color: var(--muted); font-family: 'Syne', sans-serif;
+    font-size: 0.78rem; font-weight: 600; cursor: pointer;
+    transition: all 0.15s; margin-top: 4px;
+  }
+  .btn-back:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+
+  /* STEP 3 — CONFIRM */
+  .confirm-wrap {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 16px; text-align: center;
+    padding: 1rem 0;
+  }
+  .confirm-icon { font-size: 4rem; animation: pop 0.4s cubic-bezier(0.175,0.885,0.32,1.275) both; }
+  .confirm-title { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.02em; }
+  .confirm-detail {
+    font-size: 0.78rem; color: var(--muted);
+    font-family: 'DM Mono', monospace; line-height: 1.6;
+  }
+  .confirm-time {
+    font-size: 2rem; font-weight: 800; font-family: 'DM Mono', monospace;
+    color: var(--cyan); letter-spacing: 0.05em;
+  }
+  .btn-another {
+    width: 100%; padding: 12px; border-radius: 12px;
+    background: linear-gradient(135deg, var(--cyan), var(--blue));
+    color: #fff; border: none; font-family: 'Syne', sans-serif;
+    font-size: 0.85rem; font-weight: 700; cursor: pointer;
+    transition: all 0.15s; margin-top: 8px;
+  }
+  .btn-another:hover { opacity: 0.9; }
+
+  /* Clock in header */
+  .clock-bar {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem; color: var(--muted);
+    text-align: center; margin-bottom: 1.2rem;
+    letter-spacing: 0.05em;
+  }
+  .clock-bar span { color: var(--cyan); }
+
+  /* Loading */
+  .loading-dot {
+    display: inline-block; width: 6px; height: 6px;
+    border-radius: 50%; background: var(--cyan);
+    animation: blink 1s infinite;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeDown { from { opacity:0; transform:translateY(-16px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes fadeUp   { from { opacity:0; transform:translateY(16px);  } to { opacity:1; transform:translateY(0); } }
+  @keyframes pop      { from { opacity:0; transform:scale(0.5); } to { opacity:1; transform:scale(1); } }
+  @keyframes blink    { 0%,100% { opacity:1; } 50% { opacity:0.2; } }
+
+  /* Light mode */
+  @media (prefers-color-scheme: light) {
+    :root { --dark:#f3f4f6; --surface:#ffffff; --border:rgba(0,0,0,0.09); --text:#1a1a1a; --muted:#6b7280; }
+    body::before { background: radial-gradient(circle, rgba(25,205,235,0.05) 0%, transparent 70%); }
+    .card { box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
+    .name-btn { background: rgba(0,0,0,0.02); }
+    .name-btn:hover { background: rgba(25,205,235,0.06); }
+  }
+</style>
+</head>
+<body>
+
+<div class="logo-wrap">
+  <img class="logo-img" src="https://i.ibb.co/tMRCCW07/Hero-Nuevo-Circulo-1.png" alt="Hero Insurance">
+  <div class="logo-title">Hero Insurance · Check-in</div>
+</div>
+
+<div class="card">
+  <div class="clock-bar" id="clock-bar">— : — : —</div>
+
+  <!-- STEP 1: SELECT EMPLOYEE -->
+  <div id="step-select">
+    <div class="step-title">¿Quién eres?</div>
+    <div class="step-sub">Selecciona tu nombre para registrar</div>
+    <div class="name-list" id="name-list">
+      <div style="text-align:center;padding:2rem;color:var(--muted);font-size:0.8rem">
+        <span class="loading-dot"></span> Cargando empleados...
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2: ACTION -->
+  <div id="step-action">
+    <div class="selected-user" id="selected-user"></div>
+    <div class="step-sub">¿Qué deseas registrar?</div>
+    <div class="action-grid">
+      <button class="action-btn entrada" onclick="doCheckin('entrada')">
+        <span class="action-icon">🟢</span>
+        <span class="action-label">ENTRADA</span>
+        <span class="action-time" id="time-entrada">—</span>
+      </button>
+      <button class="action-btn salida" onclick="doCheckin('salida')">
+        <span class="action-icon">🔴</span>
+        <span class="action-label">SALIDA</span>
+        <span class="action-time" id="time-salida">—</span>
+      </button>
+      <button class="action-btn receso" onclick="doCheckin('receso')">
+        <span class="action-icon">☕</span>
+        <span class="action-label">RECESO</span>
+      </button>
+    </div>
+    <button class="btn-back" onclick="goBack()">← Cambiar nombre</button>
+  </div>
+
+  <!-- STEP 3: CONFIRMATION -->
+  <div id="step-confirm">
+    <div class="confirm-wrap">
+      <div class="confirm-icon" id="confirm-icon">✅</div>
+      <div class="confirm-title" id="confirm-title">¡Registrado!</div>
+      <div class="confirm-time" id="confirm-time">—</div>
+      <div class="confirm-detail" id="confirm-detail">—</div>
+      <button class="btn-another" onclick="goBack()">← Volver al inicio</button>
+    </div>
+  </div>
+</div>
+
+<!-- Firebase -->
+<script type="module">
+  import { initializeApp }   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, doc, setDoc, onSnapshot }
+                             from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey:            "AIzaSyBYAOoCmEchNj40wIaqRWTWtB6CkVypVDA",
+    authDomain:        "office-manager-app-b82c1.firebaseapp.com",
+    projectId:         "office-manager-app-b82c1",
+    storageBucket:     "office-manager-app-b82c1.firebasestorage.app",
+    messagingSenderId: "579154430165",
+    appId:             "1:579154430165:web:03f05d5c1bfc5472a2fa5c"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getFirestore(app);
+
+  // ── STATE ──────────────────────────────────────────
+  let employees = [];
+  let selectedEmp = null;
+
+  // ── CLOCK ──────────────────────────────────────────
+  function tick() {
+    const now = new Date();
+    const time = now.toLocaleTimeString('es-US', { hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:true });
+    const date = now.toLocaleDateString('es-US', { weekday:'long', month:'long', day:'numeric' });
+    document.getElementById('clock-bar').innerHTML = `<span>${time}</span> &nbsp;·&nbsp; ${date}`;
+    document.getElementById('time-entrada').textContent = now.toLocaleTimeString('es-US',{hour:'2-digit',minute:'2-digit',hour12:true});
+    document.getElementById('time-salida').textContent  = now.toLocaleTimeString('es-US',{hour:'2-digit',minute:'2-digit',hour12:true});
+  }
+  setInterval(tick, 1000); tick();
+
+  // ── LOAD EMPLOYEES FROM FIREBASE ───────────────────
+  onSnapshot(collection(db, 'empleados'), snap => {
+    employees = snap.docs.map(d => d.data()).sort((a,b) => a.name.localeCompare(b.name));
+    renderNames();
+  });
+
+  function empInitials(name) {
+    return name.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();
+  }
+
+  function renderNames() {
+    const list = document.getElementById('name-list');
+    if (!employees.length) {
+      list.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--muted);font-size:0.8rem">Sin empleados registrados.</div>';
+      return;
+    }
+    list.innerHTML = employees.map((e, i) => `
+      <button class="name-btn" onclick="selectEmployee('${e.id}')">
+        <div class="name-avatar av-${i % 8}">${empInitials(e.name)}</div>
+        <div class="name-info">
+          <div class="name-label">${e.name}</div>
+          <div class="name-role">${e.role || ''}</div>
+        </div>
+        <span class="name-arrow">›</span>
+      </button>`).join('');
+  }
+
+  // ── SELECT EMPLOYEE ────────────────────────────────
+  window.selectEmployee = (id) => {
+    selectedEmp = employees.find(e => e.id === id);
+    if (!selectedEmp) return;
+    const i = employees.indexOf(selectedEmp);
+
+    document.getElementById('selected-user').innerHTML = `
+      <div class="selected-avatar av-${i % 8}">${empInitials(selectedEmp.name)}</div>
+      <div>
+        <div class="selected-name">${selectedEmp.name}</div>
+        <div class="selected-role">${selectedEmp.role || ''}</div>
+      </div>`;
+
+    show('step-action');
+  };
+
+  // ── DO CHECK-IN ────────────────────────────────────
+  window.doCheckin = async (type) => {
+    if (!selectedEmp) return;
+
+    const now     = new Date();
+    const todayStr = now.toISOString().slice(0,10);
+    const timeStr  = now.toLocaleTimeString('es-US',{hour:'2-digit',minute:'2-digit',hour12:true});
+    const docId    = `${selectedEmp.id}_${todayStr}`;
+
+    const typeMap = {
+      entrada: { field:'timeIn',  label:'Entrada registrada', icon:'🟢' },
+      salida:  { field:'timeOut', label:'Salida registrada',  icon:'🔴' },
+      receso:  { field:'receso',  label:'Receso registrado',  icon:'☕' },
+    };
+    const t = typeMap[type];
+
+    // Save to Firebase checkins collection
+    try {
+      const ref = doc(db, 'checkins', docId);
+      const update = {
+        id:     docId,
+        empId:  selectedEmp.id,
+        date:   todayStr,
+        mode:   'remoto',
+        [t.field]: timeStr
+      };
+      await setDoc(ref, update, { merge: true });
+
+      // Show confirmation
+      document.getElementById('confirm-icon').textContent  = t.icon;
+      document.getElementById('confirm-title').textContent = t.label;
+      document.getElementById('confirm-time').textContent  = timeStr;
+      document.getElementById('confirm-detail').innerHTML  =
+        `<strong>${selectedEmp.name}</strong><br>${now.toLocaleDateString('es-US',{weekday:'long',month:'long',day:'numeric'})}`;
+
+      show('step-confirm');
+
+      // Auto-return after 5 seconds
+      setTimeout(() => goBack(), 5000);
+
+    } catch(err) {
+      alert('Error al registrar. Por favor intenta de nuevo.');
+      console.error(err);
+    }
+  };
+
+  // ── NAVIGATION ─────────────────────────────────────
+  window.goBack = () => {
+    selectedEmp = null;
+    show('step-select');
+  };
+
+  function show(stepId) {
+    ['step-select','step-action','step-confirm'].forEach(id => {
+      document.getElementById(id).style.display = id === stepId ? 'block' : 'none';
+    });
+  }
+</script>
+</body>
+</html>

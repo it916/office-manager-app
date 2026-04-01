@@ -1137,7 +1137,7 @@ function renderWeek() {
 
     return '<tr>'
       + '<td class="col-name">'
-        + '<div style="display:flex;align-items:center;gap:10px;cursor:pointer" onclick="openProfile('' + emp.id + '')">'
+        + '<div style="display:flex;align-items:center;gap:10px;cursor:pointer" onclick="openProfile(\'' + emp.id + '\')">'
         + '<div class="ecard-avatar ' + avatarClass(i) + '" style="width:32px;height:32px;font-size:0.74rem;border-radius:8px;flex-shrink:0">' + empInitials(emp.name) + '</div>'
         + '<div><div style="font-weight:600;font-size:0.82rem;color:var(--text)">' + emp.name + '</div>'
         + '<div style="font-size:0.62rem;color:var(--muted)">' + emp.dept + '</div></div>'

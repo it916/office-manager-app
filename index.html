@@ -214,7 +214,6 @@
   .att-chip.ac-empty      { opacity: 0.4; }
   /* Popup menu */
   .att-popup { position: fixed; z-index: 1000; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); box-shadow: var(--shadow-lg); padding: 6px; display: none; min-width: 170px; }
-  .att-popup.open { display: block; }
   .att-popup-item { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: var(--radius-xs); cursor: pointer; font-size: 0.78rem; font-weight: 500; color: var(--text2); transition: background 0.12s; white-space: nowrap; border: none; background: none; width: 100%; text-align: left; font-family: 'Inter', sans-serif; }
   .att-popup-item:hover { background: var(--surface3); }
   .att-popup-item.active { font-weight: 700; }
@@ -1312,11 +1311,17 @@ function toggleStatus(empId,date,field) {
 }
 // ── Popup state ──
 let attPopupOpen = null;
+let attPopupIgnoreNext = false;
+
 function closeAttPopup() {
-  if (attPopupOpen) { attPopupOpen.style.display = 'none'; attPopupOpen = null; }
+  var p = document.getElementById('att-global-popup');
+  if (p) p.style.display = 'none';
+  attPopupOpen = null;
 }
-document.addEventListener('click', function(e) {
-  if (attPopupOpen && !attPopupOpen.contains(e.target)) closeAttPopup();
+
+document.addEventListener('click', function() {
+  if (attPopupIgnoreNext) { attPopupIgnoreNext = false; return; }
+  closeAttPopup();
 });
 
 const ATT_STATUSES = [
@@ -1334,20 +1339,30 @@ function getCellEmoji(rec) {
 }
 
 function openAttPopup(btn, empId, dateStr) {
-  event.stopPropagation();
+  attPopupIgnoreNext = true;
   closeAttPopup();
-  var popup = btn.querySelector('.att-popup');
-  if (!popup) return;
+  // Get or create global popup element
+  var gp = document.getElementById('att-global-popup');
+  if (!gp) {
+    gp = document.createElement('div');
+    gp.id = 'att-global-popup';
+    gp.className = 'att-popup';
+    document.body.appendChild(gp);
+  }
+  // Get popup content from the chip's hidden popup
+  var inner = btn.querySelector('.att-popup');
+  if (!inner) return;
+  gp.innerHTML = inner.innerHTML;
   var rect = btn.getBoundingClientRect();
   var pw = 175;
   var left = rect.left + rect.width / 2 - pw / 2;
   if (left < 8) left = 8;
   if (left + pw > window.innerWidth - 8) left = window.innerWidth - pw - 8;
-  popup.style.top     = (rect.bottom + 6) + 'px';
-  popup.style.left    = left + 'px';
-  popup.style.width   = pw + 'px';
-  popup.style.display = 'block';
-  attPopupOpen = popup;
+  gp.style.top     = (rect.bottom + 6) + 'px';
+  gp.style.left    = left + 'px';
+  gp.style.width   = pw + 'px';
+  gp.style.display = 'block';
+  attPopupOpen = gp;
 }
 
 

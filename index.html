@@ -283,57 +283,26 @@
   .mobile-nav .nav-btn.active { border-bottom-color: var(--primary); background: transparent; color: var(--primary); }
 
   /* ── CALENDAR ── */
-  .cal-day-hdr {
-    padding: 8px 4px; text-align: center;
-    font-family: 'DM Mono', monospace; font-size: 0.65rem;
-    letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--muted); border-bottom: 1px solid var(--border);
-    background: var(--surface);
-  }
-  .cal-cell {
-    min-height: 90px; padding: 6px;
-    border-right: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    cursor: pointer; transition: background 0.15s;
-    position: relative; vertical-align: top;
-  }
-  .cal-cell:hover { background: rgba(25,205,235,0.04); }
-  .cal-cell.other-month { opacity: 0.3; }
-  .cal-cell.today { background: rgba(25,205,235,0.06); }
-  .cal-cell.today .cal-day-num { color: var(--cyan); font-weight: 800; }
-  .cal-cell.weekend { background: rgba(255,255,255,0.01); }
-  .cal-day-num {
-    font-family: 'DM Mono', monospace; font-size: 0.75rem;
-    color: var(--muted); margin-bottom: 4px; font-weight: 600;
-  }
-  .cal-event-pill {
-    display: flex; align-items: center; gap: 4px;
-    padding: 2px 6px; border-radius: 4px;
-    font-size: 0.62rem; font-weight: 700;
-    margin-bottom: 2px; cursor: pointer;
-    white-space: nowrap; overflow: hidden;
-    text-overflow: ellipsis; max-width: 100%;
-  }
-  .cal-more { font-size: 0.6rem; color: var(--muted); font-family: 'DM Mono', monospace; margin-top: 2px; }
-
-  /* Permission type colors */
-  .ptype-medical   { background: rgba(239,68,68,0.18);  color: #ef4444; }
-  .ptype-personal  { background: rgba(168,85,247,0.18); color: #a855f7; }
-  .ptype-vacation  { background: rgba(34,197,94,0.18);  color: #22c55e; }
-  .ptype-dayoff    { background: rgba(25,205,235,0.18); color: #19CDEB; }
-  .ptype-late      { background: rgba(245,158,11,0.18); color: #f59e0b; }
-  .ptype-absence   { background: rgba(249,115,22,0.18); color: #f97316; }
-
-  .cal-summary-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 10px; padding: 0.9rem 1rem;
-    position: relative; overflow: hidden;
-  }
-  .cal-summary-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
-  .cal-emp-name { font-weight: 700; font-size: 0.82rem; margin-bottom: 4px; }
-  .cal-emp-hours { font-family: 'DM Mono', monospace; font-size: 1.3rem; font-weight: 800; color: var(--cyan); }
-  .cal-emp-detail { font-size: 0.68rem; color: var(--muted); margin-top: 2px; line-height: 1.5; }
-
+  .cal-day-hdr { padding:8px 4px;text-align:center;font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);background:var(--surface); }
+  .cal-cell { min-height:90px;padding:6px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.15s; }
+  .cal-cell:hover { background:rgba(25,205,235,0.04); }
+  .cal-cell.other-month { opacity:0.3; }
+  .cal-cell.today { background:rgba(25,205,235,0.06); }
+  .cal-cell.today .cal-day-num { color:var(--cyan);font-weight:800; }
+  .cal-cell.weekend { background:rgba(255,255,255,0.01); }
+  .cal-day-num { font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--muted);margin-bottom:4px;font-weight:600; }
+  .cal-event-pill { display:flex;align-items:center;gap:4px;padding:2px 6px;border-radius:4px;font-size:0.62rem;font-weight:700;margin-bottom:2px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%; }
+  .cal-more { font-size:0.6rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:2px; }
+  .ptype-medical  { background:rgba(239,68,68,0.18); color:#ef4444; }
+  .ptype-personal { background:rgba(168,85,247,0.18);color:#a855f7; }
+  .ptype-vacation { background:rgba(34,197,94,0.18); color:#22c55e; }
+  .ptype-dayoff   { background:rgba(25,205,235,0.18);color:#19CDEB; }
+  .ptype-late     { background:rgba(245,158,11,0.18);color:#f59e0b; }
+  .ptype-absence  { background:rgba(249,115,22,0.18);color:#f97316; }
+  .cal-summary-card { background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:0.9rem 1rem;position:relative;overflow:hidden; }
+  .cal-emp-name  { font-weight:700;font-size:0.82rem;margin-bottom:4px; }
+  .cal-emp-hours { font-family:'DM Mono',monospace;font-size:1.3rem;font-weight:800;color:var(--cyan); }
+  .cal-emp-detail{ font-size:0.68rem;color:var(--muted);margin-top:2px;line-height:1.5; }
 </style>
 </head>
 <body>
@@ -424,14 +393,9 @@
 
 <div id="tab-calendario" class="tab-content">
   <div class="page-header">
-    <div>
-      <div class="page-title">Calendario de Permisos</div>
-      <div class="page-desc">Vista mensual de permisos, ausencias y vacaciones</div>
-    </div>
+    <div><div class="page-title">Calendario de Permisos</div><div class="page-desc">Vista mensual de permisos por empleado</div></div>
     <button class="btn btn-primary btn-sm" onclick="openCalModal()">+ Agregar Permiso</button>
   </div>
-
-  <!-- Month nav -->
   <div class="toolbar" style="margin-bottom:1rem">
     <div class="toolbar-left">
       <button class="btn btn-outline btn-sm btn-icon" onclick="calPrevMonth()">←</button>
@@ -441,17 +405,11 @@
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap" id="cal-legend"></div>
   </div>
-
-  <!-- Summary strip -->
   <div id="cal-summary" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:0.8rem;margin-bottom:1.2rem"></div>
-
-  <!-- Calendar grid -->
   <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm)">
     <div id="cal-day-headers" style="display:grid;grid-template-columns:repeat(7,1fr)"></div>
     <div id="cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr)"></div>
   </div>
-
-  <!-- Day detail panel -->
   <div id="cal-day-detail" style="display:none;margin-top:1rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem;box-shadow:var(--shadow-sm)">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.8rem">
       <div style="font-weight:700;font-size:0.95rem" id="cal-detail-title">—</div>
@@ -563,6 +521,138 @@ function calcHours(timeIn, timeOut) {
   if (mins <= 0) return null;
   const h = Math.floor(mins/60), m = mins%60;
   return { hours: h, mins: m, total: mins, display: h+'h '+m+'m' };
+}
+
+
+// ═══════════════════════════════════════
+//  CALENDARIO DE PERMISOS
+// ═══════════════════════════════════════
+const PERM_TYPES = {
+  medical:  {label:'Permiso Médico',              icon:'🏥',cls:'ptype-medical', color:'#ef4444'},
+  personal: {label:'Permiso Personal',            icon:'🟣',cls:'ptype-personal',color:'#a855f7'},
+  vacation: {label:'Vacaciones',                  icon:'🏖️',cls:'ptype-vacation',color:'#22c55e'},
+  dayoff:   {label:'Día Libre',                   icon:'☀️',cls:'ptype-dayoff',  color:'#19CDEB'},
+  late:     {label:'Llegada Tarde/Salida Temprana',icon:'⏰',cls:'ptype-late',   color:'#f59e0b'},
+  absence:  {label:'Ausencia Justificada',        icon:'❌',cls:'ptype-absence', color:'#f97316'},
+};
+const CAL_DAYS=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+const CAL_MONTHS=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+let calYear=new Date().getFullYear(), calMonth=new Date().getMonth();
+
+function calPrevMonth(){calMonth--;if(calMonth<0){calMonth=11;calYear--;}renderCalendar();}
+function calNextMonth(){calMonth++;if(calMonth>11){calMonth=0;calYear++;}renderCalendar();}
+function calGoToday(){calYear=new Date().getFullYear();calMonth=new Date().getMonth();renderCalendar();}
+
+function renderCalendar(){
+  if(!attState.calPermisos)attState.calPermisos=[];
+  const todayStr=fmtDate(new Date());
+  const firstDay=new Date(calYear,calMonth,1);
+  const lastDay=new Date(calYear,calMonth+1,0);
+  const startDow=firstDay.getDay();
+  document.getElementById('cal-month-label').textContent=CAL_MONTHS[calMonth]+' '+calYear;
+  document.getElementById('cal-legend').innerHTML=Object.entries(PERM_TYPES).map(([k,t])=>
+    '<div style="display:flex;align-items:center;gap:5px;font-size:0.7rem;color:var(--muted)"><div style="width:10px;height:10px;border-radius:3px;background:'+t.color+';opacity:0.7"></div>'+t.label+'</div>'
+  ).join('');
+  document.getElementById('cal-day-headers').innerHTML=CAL_DAYS.map(d=>'<div class="cal-day-hdr">'+d+'</div>').join('');
+  const cells=[];
+  for(let i=0;i<startDow;i++){const d=new Date(calYear,calMonth,-startDow+i+1);cells.push({date:fmtDate(d),current:false,dow:d.getDay()});}
+  for(let d=1;d<=lastDay.getDate();d++){const dt=new Date(calYear,calMonth,d);cells.push({date:fmtDate(dt),current:true,dow:dt.getDay()});}
+  const rem=42-cells.length;for(let i=1;i<=rem;i++){const dt=new Date(calYear,calMonth+1,i);cells.push({date:fmtDate(dt),current:false,dow:dt.getDay()});}
+  const monthStr=calYear+'-'+String(calMonth+1).padStart(2,'0');
+  const mp=attState.calPermisos.filter(p=>p.date&&p.date.startsWith(monthStr));
+  document.getElementById('cal-grid').innerHTML=cells.map(cell=>{
+    const dp=mp.filter(p=>p.date===cell.date);
+    const dayNum=parseInt(cell.date.split('-')[2]);
+    const pills=dp.slice(0,3).map(p=>{
+      const emp=getEmpById(p.empId);const t=PERM_TYPES[p.type]||PERM_TYPES.absence;
+      return '<div class="cal-event-pill '+t.cls+'" onclick="event.stopPropagation();showDayDetail(''+cell.date+'')">'+t.icon+' '+(emp?emp.name.split(' ')[0]:'?')+(p.hours?' '+p.hours+'h':'')+'</div>';
+    }).join('');
+    const more=dp.length>3?'<div class="cal-more">+'+(dp.length-3)+' más</div>':'';
+    return '<div class="cal-cell'
+      +(!cell.current?' other-month':'')+(cell.date===todayStr?' today':'')+(cell.dow===0||cell.dow===6?' weekend':'')
+      +'" onclick="showDayDetail(''+cell.date+'')">'
+      +'<div class="cal-day-num">'+dayNum+'</div>'+pills+more+'</div>';
+  }).join('');
+  renderCalSummary(monthStr);
+}
+
+function renderCalSummary(monthStr){
+  const mp=attState.calPermisos.filter(p=>p.date&&p.date.startsWith(monthStr));
+  const byEmp={};
+  mp.forEach(p=>{if(!byEmp[p.empId])byEmp[p.empId]={total:0,types:{}};byEmp[p.empId].total+=parseFloat(p.hours||0);byEmp[p.empId].types[p.type]=(byEmp[p.empId].types[p.type]||0)+1;});
+  const c=document.getElementById('cal-summary');
+  if(!Object.keys(byEmp).length){c.innerHTML='';return;}
+  c.innerHTML=Object.entries(byEmp).map(([empId,data])=>{
+    const emp=getEmpById(empId);
+    const ts=Object.entries(data.types).map(([t,n])=>(PERM_TYPES[t]?PERM_TYPES[t].icon:'📌')+' '+n).join(' · ');
+    return '<div class="cal-summary-card" style="border-top:3px solid var(--cyan)"><div class="cal-emp-name">'+(emp?emp.name:'—')+'</div><div class="cal-emp-hours">'+data.total+'h</div><div class="cal-emp-detail">'+ts+'</div></div>';
+  }).join('');
+}
+
+function showDayDetail(dateStr){
+  const dp=attState.calPermisos.filter(p=>p.date===dateStr);
+  const parts=dateStr.split('-');
+  document.getElementById('cal-detail-title').textContent=CAL_DAYS[new Date(dateStr+'T12:00:00').getDay()]+' '+parseInt(parts[2])+' de '+CAL_MONTHS[parseInt(parts[1])-1]+' '+parts[0];
+  if(!dp.length){
+    document.getElementById('cal-detail-list').innerHTML='<div style="color:var(--muted);font-size:0.82rem;padding:0.5rem 0">Sin permisos para este día. <button class="btn btn-outline btn-sm" style="margin-left:8px" onclick="openCalModal(''+dateStr+'')">+ Agregar</button></div>';
+  } else {
+    document.getElementById('cal-detail-list').innerHTML=dp.map(p=>{
+      const emp=getEmpById(p.empId);const t=PERM_TYPES[p.type]||PERM_TYPES.absence;
+      return '<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--border)">'
+        +'<span style="font-size:1.2rem">'+t.icon+'</span>'
+        +'<div style="flex:1"><div style="font-weight:700;font-size:0.85rem">'+(emp?emp.name:'—')+'</div>'
+        +'<div style="font-size:0.72rem;color:var(--muted)">'+t.label+(p.hours?' · '+p.hours+'h':'')+(p.note?' · '+p.note:'')+'</div></div>'
+        +'<div style="display:flex;gap:6px"><button class="btn btn-outline btn-sm btn-icon" onclick="editCalPermiso(''+p.id+'')">✏️</button>'
+        +'<button class="btn btn-danger btn-sm btn-icon" onclick="deleteCalPermiso(''+p.id+'')">✕</button></div></div>';
+    }).join('');
+  }
+  document.getElementById('cal-day-detail').style.display='block';
+  document.getElementById('cal-day-detail').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function openCalModal(prefillDate){
+  document.getElementById('cal-edit-id').value='';
+  document.getElementById('cal-modal-title').textContent='Nuevo Permiso';
+  populateEmpSelect('cal-emp');
+  document.getElementById('cal-date').value=prefillDate||fmtDate(new Date());
+  document.getElementById('cal-type').value='medical';
+  document.getElementById('cal-hours').value='';
+  document.getElementById('cal-note').value='';
+  openModal('modal-cal');
+}
+
+function editCalPermiso(id){
+  const p=attState.calPermisos.find(x=>x.id===id);if(!p)return;
+  document.getElementById('cal-modal-title').textContent='Editar Permiso';
+  document.getElementById('cal-edit-id').value=p.id;
+  populateEmpSelect('cal-emp',p.empId);
+  document.getElementById('cal-date').value=p.date;
+  document.getElementById('cal-type').value=p.type;
+  document.getElementById('cal-hours').value=p.hours||'';
+  document.getElementById('cal-note').value=p.note||'';
+  openModal('modal-cal');
+}
+
+function saveCalPermiso(){
+  const editId=document.getElementById('cal-edit-id').value;
+  const empId=document.getElementById('cal-emp').value;
+  const date=document.getElementById('cal-date').value;
+  const type=document.getElementById('cal-type').value;
+  const hours=parseFloat(document.getElementById('cal-hours').value)||0;
+  const note=document.getElementById('cal-note').value.trim();
+  if(!date||!empId){alert('Selecciona empleado y fecha.');return;}
+  if(editId){const p=attState.calPermisos.find(x=>x.id===editId);if(p)Object.assign(p,{empId,date,type,hours,note});}
+  else{attState.calPermisos.push({id:uid(),empId,date,type,hours,note});}
+  if(window.fbSet)attState.calPermisos.forEach(p=>window.fbSet('calpermisos',p.id,p));
+  saveAtt();closeModal('modal-cal');renderCalendar();showDayDetail(date);
+}
+
+function deleteCalPermiso(id){
+  if(!confirm('¿Eliminar este permiso?'))return;
+  if(window.fbDelete)window.fbDelete('calpermisos',id);
+  attState.calPermisos=attState.calPermisos.filter(x=>x.id!==id);
+  saveAtt();renderCalendar();
+  document.getElementById('cal-day-detail').style.display='none';
 }
 
 // ═══════════════════════════════════════
@@ -1278,198 +1368,6 @@ function showSyncStatus(msg, color) {
   el.style.background = 'rgba('+rgb+',0.08)';
 }
 
-
-// ═══════════════════════════════════════
-//  CALENDARIO DE PERMISOS
-// ═══════════════════════════════════════
-
-const PERM_TYPES = {
-  medical:  { label:'Permiso Médico',               icon:'🏥', cls:'ptype-medical',  color:'#ef4444' },
-  personal: { label:'Permiso Personal',             icon:'🟣', cls:'ptype-personal', color:'#a855f7' },
-  vacation: { label:'Vacaciones',                   icon:'🏖️', cls:'ptype-vacation', color:'#22c55e' },
-  dayoff:   { label:'Día Libre',                    icon:'☀️', cls:'ptype-dayoff',   color:'#19CDEB' },
-  late:     { label:'Llegada Tarde/Salida Temprana',icon:'⏰', cls:'ptype-late',     color:'#f59e0b' },
-  absence:  { label:'Ausencia Justificada',         icon:'❌', cls:'ptype-absence',  color:'#f97316' },
-};
-
-const CAL_DAYS   = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
-const CAL_MONTHS = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-
-let calYear  = new Date().getFullYear();
-let calMonth = new Date().getMonth();
-
-function calPrevMonth() { calMonth--; if(calMonth<0){calMonth=11;calYear--;} renderCalendar(); }
-function calNextMonth() { calMonth++; if(calMonth>11){calMonth=0;calYear++;} renderCalendar(); }
-function calGoToday()   { calYear=new Date().getFullYear(); calMonth=new Date().getMonth(); renderCalendar(); }
-
-function renderCalendar() {
-  if (!attState.calPermisos) attState.calPermisos = [];
-  const today    = new Date();
-  const firstDay = new Date(calYear, calMonth, 1);
-  const lastDay  = new Date(calYear, calMonth+1, 0);
-  const startDow = firstDay.getDay();
-  const todayStr = fmtDate(today);
-
-  document.getElementById('cal-month-label').textContent = CAL_MONTHS[calMonth] + ' ' + calYear;
-
-  // Legend
-  document.getElementById('cal-legend').innerHTML = Object.entries(PERM_TYPES).map(([k,t]) =>
-    '<div style="display:flex;align-items:center;gap:5px;font-size:0.7rem;color:var(--muted)">'
-    + '<div style="width:10px;height:10px;border-radius:3px;background:'+t.color+';opacity:0.7"></div>'+t.label+'</div>'
-  ).join('');
-
-  // Day headers
-  document.getElementById('cal-day-headers').innerHTML = CAL_DAYS.map(d =>
-    '<div class="cal-day-hdr">'+d+'</div>'
-  ).join('');
-
-  // Build cells
-  const cells = [];
-  for(let i=0; i<startDow; i++){
-    const d = new Date(calYear, calMonth, -startDow+i+1);
-    cells.push({ date: fmtDate(d), current: false, dow: d.getDay() });
-  }
-  for(let d=1; d<=lastDay.getDate(); d++){
-    const dt = new Date(calYear, calMonth, d);
-    cells.push({ date: fmtDate(dt), current: true, dow: dt.getDay() });
-  }
-  const remaining = 42 - cells.length;
-  for(let i=1; i<=remaining; i++){
-    const dt = new Date(calYear, calMonth+1, i);
-    cells.push({ date: fmtDate(dt), current: false, dow: dt.getDay() });
-  }
-
-  const monthStr = calYear+'-'+String(calMonth+1).padStart(2,'0');
-  const monthPermisos = attState.calPermisos.filter(p => p.date && p.date.startsWith(monthStr));
-
-  document.getElementById('cal-grid').innerHTML = cells.map(cell => {
-    const dayPermisos = monthPermisos.filter(p => p.date === cell.date);
-    const dayNum  = parseInt(cell.date.split('-')[2]);
-    const isToday = cell.date === todayStr;
-    const isWeekend = cell.dow === 0 || cell.dow === 6;
-
-    const pills = dayPermisos.slice(0,3).map(p => {
-      const emp = getEmpById(p.empId);
-      const t   = PERM_TYPES[p.type] || PERM_TYPES.absence;
-      return '<div class="cal-event-pill '+t.cls+'" onclick="event.stopPropagation();showDayDetail(''+cell.date+'')">'
-        + t.icon+' '+(emp ? emp.name.split(' ')[0] : '?')+(p.hours?' '+p.hours+'h':'')+'</div>';
-    }).join('');
-
-    const more = dayPermisos.length > 3
-      ? '<div class="cal-more">+' + (dayPermisos.length-3) + ' más</div>' : '';
-
-    return '<div class="cal-cell'
-      + (!cell.current?' other-month':'')
-      + (isToday?' today':'')
-      + (isWeekend?' weekend':'')
-      + '" onclick="showDayDetail(''+cell.date+'')">'
-      + '<div class="cal-day-num">'+dayNum+'</div>'
-      + pills + more + '</div>';
-  }).join('');
-
-  renderCalSummary(monthStr);
-}
-
-function renderCalSummary(monthStr) {
-  const monthPermisos = attState.calPermisos.filter(p => p.date && p.date.startsWith(monthStr));
-  const byEmp = {};
-  monthPermisos.forEach(p => {
-    if (!byEmp[p.empId]) byEmp[p.empId] = { total:0, types:{} };
-    byEmp[p.empId].total += parseFloat(p.hours||0);
-    byEmp[p.empId].types[p.type] = (byEmp[p.empId].types[p.type]||0)+1;
-  });
-  const container = document.getElementById('cal-summary');
-  if (!Object.keys(byEmp).length) { container.innerHTML=''; return; }
-  container.innerHTML = Object.entries(byEmp).map(([empId, data]) => {
-    const emp = getEmpById(empId);
-    const typesSummary = Object.entries(data.types).map(([t,c]) =>
-      (PERM_TYPES[t]?PERM_TYPES[t].icon:'📌')+' '+c).join(' · ');
-    return '<div class="cal-summary-card" style="border-top:3px solid var(--cyan)">'
-      + '<div class="cal-emp-name">'+(emp?emp.name:'—')+'</div>'
-      + '<div class="cal-emp-hours">'+data.total+'h</div>'
-      + '<div class="cal-emp-detail">'+typesSummary+'</div></div>';
-  }).join('');
-}
-
-function showDayDetail(dateStr) {
-  const dayPermisos = attState.calPermisos.filter(p => p.date === dateStr);
-  const parts = dateStr.split('-');
-  const dow   = new Date(dateStr).getDay();
-  document.getElementById('cal-detail-title').textContent =
-    CAL_DAYS[dow]+' '+parseInt(parts[2])+' de '+CAL_MONTHS[parseInt(parts[1])-1]+' '+parts[0];
-
-  if (!dayPermisos.length) {
-    document.getElementById('cal-detail-list').innerHTML =
-      '<div style="color:var(--muted);font-size:0.82rem;padding:0.5rem 0">Sin permisos para este día.'
-      +'<button class="btn btn-outline btn-sm" style="margin-left:8px" onclick="openCalModal(''+dateStr+'')">+ Agregar</button></div>';
-  } else {
-    document.getElementById('cal-detail-list').innerHTML = dayPermisos.map(p => {
-      const emp = getEmpById(p.empId);
-      const t   = PERM_TYPES[p.type] || PERM_TYPES.absence;
-      return '<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--border)">'
-        + '<span style="font-size:1.2rem">'+t.icon+'</span>'
-        + '<div style="flex:1"><div style="font-weight:700;font-size:0.85rem">'+(emp?emp.name:'—')+'</div>'
-        + '<div style="font-size:0.72rem;color:var(--muted)">'+t.label+(p.hours?' · '+p.hours+'h':'')+(p.note?' · '+p.note:'')+'</div></div>'
-        + '<div style="display:flex;gap:6px">'
-        + '<button class="btn btn-outline btn-sm btn-icon" onclick="editCalPermiso(''+p.id+'')">✏️</button>'
-        + '<button class="btn btn-danger btn-sm btn-icon" onclick="deleteCalPermiso(''+p.id+'')">✕</button>'
-        + '</div></div>';
-    }).join('');
-  }
-  document.getElementById('cal-day-detail').style.display = 'block';
-  document.getElementById('cal-day-detail').scrollIntoView({ behavior:'smooth', block:'nearest' });
-}
-
-function openCalModal(prefillDate) {
-  document.getElementById('cal-edit-id').value = '';
-  document.getElementById('cal-modal-title').textContent = 'Nuevo Permiso';
-  populateEmpSelect('cal-emp');
-  document.getElementById('cal-date').value  = prefillDate || fmtDate(new Date());
-  document.getElementById('cal-type').value  = 'medical';
-  document.getElementById('cal-hours').value = '';
-  document.getElementById('cal-note').value  = '';
-  openModal('modal-cal');
-}
-
-function editCalPermiso(id) {
-  const p = attState.calPermisos.find(x => x.id === id);
-  if (!p) return;
-  document.getElementById('cal-modal-title').textContent = 'Editar Permiso';
-  document.getElementById('cal-edit-id').value = p.id;
-  populateEmpSelect('cal-emp', p.empId);
-  document.getElementById('cal-date').value  = p.date;
-  document.getElementById('cal-type').value  = p.type;
-  document.getElementById('cal-hours').value = p.hours || '';
-  document.getElementById('cal-note').value  = p.note  || '';
-  openModal('modal-cal');
-}
-
-function saveCalPermiso() {
-  const editId = document.getElementById('cal-edit-id').value;
-  const empId  = document.getElementById('cal-emp').value;
-  const date   = document.getElementById('cal-date').value;
-  const type   = document.getElementById('cal-type').value;
-  const hours  = parseFloat(document.getElementById('cal-hours').value) || 0;
-  const note   = document.getElementById('cal-note').value.trim();
-  if (!date || !empId) { alert('Selecciona empleado y fecha.'); return; }
-  if (editId) {
-    const p = attState.calPermisos.find(x => x.id === editId);
-    if (p) Object.assign(p, { empId, date, type, hours, note });
-  } else {
-    attState.calPermisos.push({ id: uid(), empId, date, type, hours, note });
-  }
-  if (window.fbSet) attState.calPermisos.forEach(p => window.fbSet('calpermisos', p.id, p));
-  saveAtt(); closeModal('modal-cal'); renderCalendar(); showDayDetail(date);
-}
-
-function deleteCalPermiso(id) {
-  if (!confirm('¿Eliminar este permiso?')) return;
-  if (window.fbDelete) window.fbDelete('calpermisos', id);
-  attState.calPermisos = attState.calPermisos.filter(x => x.id !== id);
-  saveAtt(); renderCalendar();
-  document.getElementById('cal-day-detail').style.display = 'none';
-}
-
 // ═══════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════
@@ -1547,13 +1445,12 @@ renderDashboard();
       if (a && a.id === "tab-eventos") renderEvents();
     });
     onSnapshot(collection(db, "calpermisos"), snap => {
-      if (!attState.calPermisos) attState.calPermisos = [];
-      attState.calPermisos = snap.docs.map(d => d.data());
-      localStorage.setItem("om_att", JSON.stringify(attState));
-      const a = document.querySelector(".tab-content.active");
-      if (a && a.id === "tab-calendario") renderCalendar();
+      if(!attState.calPermisos)attState.calPermisos=[];
+      attState.calPermisos=snap.docs.map(d=>d.data());
+      localStorage.setItem("om_att",JSON.stringify(attState));
+      const a=document.querySelector(".tab-content.active");
+      if(a&&a.id==="tab-calendario")renderCalendar();
     });
-
     onSnapshot(collection(db, "horas"), snap => {
       attState.hours = snap.docs.map(d => d.data());
       localStorage.setItem("om_att", JSON.stringify(attState));
@@ -1607,7 +1504,6 @@ renderDashboard();
 
 </div><!-- end app-wrapper -->
 
-<!-- Modal: Calendario Permiso -->
 <div class="modal-overlay" id="modal-cal">
   <div class="modal">
     <div class="modal-title">📆 <span id="cal-modal-title">Nuevo Permiso</span></div>

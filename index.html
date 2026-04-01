@@ -213,7 +213,7 @@
   .att-chip.ac-vacation   { background: var(--orange-bg); border-color: var(--orange-border); }
   .att-chip.ac-empty      { opacity: 0.4; }
   /* Popup menu */
-  .att-popup { position: absolute; z-index: 500; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); box-shadow: var(--shadow-lg); padding: 6px; display: none; top: calc(100% + 6px); left: 50%; transform: translateX(-50%); min-width: 160px; }
+  .att-popup { position: fixed; z-index: 1000; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); box-shadow: var(--shadow-lg); padding: 6px; display: none; min-width: 170px; }
   .att-popup.open { display: block; }
   .att-popup-item { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: var(--radius-xs); cursor: pointer; font-size: 0.78rem; font-weight: 500; color: var(--text2); transition: background 0.12s; white-space: nowrap; border: none; background: none; width: 100%; text-align: left; font-family: 'Inter', sans-serif; }
   .att-popup-item:hover { background: var(--surface3); }
@@ -1334,9 +1334,17 @@ function getCellEmoji(rec) {
 function openAttPopup(btn, empId, dateStr) {
   event.stopPropagation();
   closeAttPopup();
-  const popup = btn.querySelector('.att-popup');
+  var popup = btn.querySelector('.att-popup');
   if (!popup) return;
   popup.classList.add('open');
+  var rect = btn.getBoundingClientRect();
+  var pw = 175;
+  var left = rect.left + rect.width / 2 - pw / 2;
+  if (left < 8) left = 8;
+  if (left + pw > window.innerWidth - 8) left = window.innerWidth - pw - 8;
+  popup.style.top  = (rect.bottom + 6) + 'px';
+  popup.style.left = left + 'px';
+  popup.style.width = pw + 'px';
   attPopupOpen = popup;
 }
 

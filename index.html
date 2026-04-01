@@ -1313,9 +1313,11 @@ function toggleStatus(empId,date,field) {
 // ── Popup state ──
 let attPopupOpen = null;
 function closeAttPopup() {
-  if (attPopupOpen) { attPopupOpen.classList.remove('open'); attPopupOpen = null; }
+  if (attPopupOpen) { attPopupOpen.style.display = 'none'; attPopupOpen = null; }
 }
-document.addEventListener('click', () => closeAttPopup());
+document.addEventListener('click', function(e) {
+  if (attPopupOpen && !attPopupOpen.contains(e.target)) closeAttPopup();
+});
 
 const ATT_STATUSES = [
   { key:'connected',  emoji:'✅', label:'Conectado',   chip:'ac-connected',  pi:'pi-connected' },
@@ -1336,15 +1338,15 @@ function openAttPopup(btn, empId, dateStr) {
   closeAttPopup();
   var popup = btn.querySelector('.att-popup');
   if (!popup) return;
-  popup.classList.add('open');
   var rect = btn.getBoundingClientRect();
   var pw = 175;
   var left = rect.left + rect.width / 2 - pw / 2;
   if (left < 8) left = 8;
   if (left + pw > window.innerWidth - 8) left = window.innerWidth - pw - 8;
-  popup.style.top  = (rect.bottom + 6) + 'px';
-  popup.style.left = left + 'px';
-  popup.style.width = pw + 'px';
+  popup.style.top     = (rect.bottom + 6) + 'px';
+  popup.style.left    = left + 'px';
+  popup.style.width   = pw + 'px';
+  popup.style.display = 'block';
   attPopupOpen = popup;
 }
 
